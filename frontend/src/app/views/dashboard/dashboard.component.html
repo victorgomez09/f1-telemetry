@@ -1,0 +1,32 @@
+{{ data$() | json }}
+
+<div class="flex flex-1 w-full h-full">
+  @if (!connected$()) {
+  <main class="flex items-center justify-center w-full h-full">
+    <div class="flex flex-col justify-center">
+      <p>
+        <strong>NO CONNECTION</strong>
+      </p>
+      <button class="btn btn-sm" (click)="handleReload()">RELOAD</button>
+    </div>
+  </main>
+  } @if (dateNow < delayTarget$()) {
+  <main class="flex items-center justify-center w-full h-full">
+    <div class="flex flex-col justify-center">
+      <p>
+        <strong>SYNCING...</strong>
+      </p>
+      <p>{{ (delayTarget$() - dateNow) / 1000 }} sec</p>
+    </div>
+  </main>
+  } @if (connected$() && !data$().Heartbeat) {
+  <main class="flex items-center justify-center w-full h-full">
+    <div class="flex flex-col justify-center items-center">
+      <p>
+        <strong>NO SESSION</strong>
+      </p>
+      <p>Come back later when there is a live session</p>
+    </div>
+  </main>
+  }
+</div>

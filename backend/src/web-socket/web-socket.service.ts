@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import ws from 'ws';
 import zlib from 'zlib';
+import { F1State } from './models/f1.model';
 
 @Injectable()
 export class WebSocketService {
@@ -13,7 +14,7 @@ export class WebSocketService {
     private emptyMessageCount = 0;
     private retryFreq = 10000;
 
-    public state = {};
+    public state: F1State = {};
     public socketFreq = 1000;
 
     constructor(private configService: ConfigService) {}

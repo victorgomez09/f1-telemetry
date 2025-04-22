@@ -48,8 +48,11 @@ export class WebsocketGateway implements OnGatewayConnection {
         this.schedulerRegistry.addInterval(name, interval);
     }
 
-    @Interval('dashbaord-data', 1000)
+    @Interval('dashboard-data', 1000)
     handleDashboardData() {
-        this.server.emit(JSON.stringify(this.webSocketService.state));
+        this.server.emit(
+            'dashboard-data',
+            JSON.stringify(this.webSocketService.state),
+        );
     }
 }

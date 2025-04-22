@@ -1,42 +1,85 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable, OnInit, signal } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
+
+import { LiveTimming } from '../../core/models/f1.model';
+import moment from 'moment';
 
 @Injectable({
   providedIn: 'root',
 })
-export class WebSocketService implements OnInit {
-  private socket: Socket;
+export class WebSocketService {
+  private socket!: Socket;
 
-  constructor() {
+  liveState$ = signal({} as LiveTimming);
+  connected$ = signal(false);
+  updated$ = signal(new Date());
+  delayMs$ = signal(0);
+  delayTarget$ = signal(0);
+  triggerConnection$ = signal(0);
+
+  initWebSocket() {
     this.socket = io(
       'https://bookish-fortnight-pgqxjg5r4wj366vq-3000.app.github.dev',
       { path: '/ws' }
     );
-  }
 
-  ngOnInit(): void {
     this.socket.on('connect', () => {
-      this.socket.emit('events', { test: 'test' });
-
-      this.socket.emit('identity', 'Atul', (response: any) =>
-        console.log('Identity:', response)
-      );
+      this.connected$.set(true);
     });
 
-    this.socket.on('message', (data) => {
-      console.log('MESSAGE', data);
-    });
-
-    this.socket.on('events', (data: any) => {
-      console.log('on event', { data: data });
+    this.socket.on('dashboard-data', (data) => {
+      setTimeout(() => {
+        try {
+          const d = JSON.parse(data);
+          this.liveState$.set(d);
+          this.updated$.set(new Date());
+        } catch (e) {
+          console.error(`could not process message: ${e}`);
+        }
+      }, this.delayMs$());
     });
 
     this.socket.on('exception', (data) => {
-      console.log('event', data);
+      this.socket.close();
     });
 
     this.socket.on('disconnect', () => {
-      console.log('Disconnected');
+      this.connected$.set(false);
     });
+  }
+
+  get sessionInfo() {
+    return this.liveState$().SessionInfo;
+  }
+
+  get trackStatus() {
+    return this.liveState$().TrackStatus;
+  }
+
+  get lapsCount() {
+    return this.liveState$().LapCount;
+  }
+
+  get extrapolatedTimeRemaining() {
+    return this.liveState$().ExtrapolatedClock.Utc &&
+      this.liveState$().ExtrapolatedClock.Remaining
+      ? this.liveState$().ExtrapolatedClock.Extrapolating
+        ? moment
+            .utc(
+              Math.max(
+                moment
+                  .duration(this.liveState$().ExtrapolatedClock.Remaining)
+                  .subtract(
+                    moment
+                      .utc()
+                      .diff(moment.utc(this.liveState$().ExtrapolatedClock.Utc))
+                  )
+                  .asMilliseconds() + this.delayMs$(),
+                0
+              )
+            )
+            .format('HH:mm:ss')
+        : this.liveState$().ExtrapolatedClock.Remaining
+      : undefined;
   }
 }

@@ -1,0 +1,46 @@
+<div class="card bg-base-100 w-96 shadow-sm">
+  <div class="card-body">
+    <div class="flex gap-2">
+      <div class="flex items-center gap-2">
+        <!-- Session name -->
+        <p>
+          <strong>{{ sessionInfo.Meeting.OfficialName }}</strong
+          >,{{ " " }} {{ sessionInfo.Meeting.Circuit.ShortName }},{{ " " }}
+          {{ sessionInfo.Meeting.Country.Name }}
+        </p>
+
+        <!-- Session type -->
+        <p>Session: {{ sessionInfo.Name }}</p>
+
+        <!-- Track status -->
+        <p>Status: {{ trackStatus.Message }}</p>
+
+        <!-- Laps -->
+        <p>Lap: {{ lapsCount.CurrentLap }}/{{ lapsCount.TotalLaps }}</p>
+
+        <!-- Time remainning -->
+        <p>Remaining: {{ extrapolatedTimeRemaining }}</p>
+      </div>
+    </div>
+
+    <!-- Connection data -->
+    <div class="flex items-center gap-2">
+      <p>Data updated: {{ updatedDate }} UTC</p>
+      <p class="text-success">CONNECTED</p>
+
+      <!-- onSubmit={(e) => {
+        e.preventDefault();
+        const form = new FormData(e.target);
+        const delayMsValue = Number(form.get("delayMs"));
+        setBlocking(true);
+        setDelayMs(delayMsValue);
+        setDelayTarget(Date.now() + delayMsValue);
+      }} -->
+      <form>
+        <p>Delay</p>
+        <Input type="number" name="delayMs" defaultValue="{delayMs}" />
+        <p>ms</p>
+      </form>
+    </div>
+  </div>
+</div>
