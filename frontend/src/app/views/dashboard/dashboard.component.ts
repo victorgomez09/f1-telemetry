@@ -8,12 +8,15 @@ import {
 } from '@angular/core';
 import moment from 'moment';
 
+import data from '../../../../EXAMPLE_DATA.json';
+import { SessionInfoComponent } from '../../core/components/session-info/session-info.component';
 import { LiveTimming } from '../../core/models/f1.model';
 import { WebSocketService } from '../../services/web-socket/web-socket.service';
+import { WheatherComponent } from "../../core/components/wheather/wheather.component";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule],
+  imports: [CommonModule, SessionInfoComponent, WheatherComponent],
   templateUrl: './dashboard.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -38,6 +41,7 @@ export class DashboardComponent implements OnInit {
     this.delayMs$ = this.websocketService.delayMs$;
     this.delayTarget$ = this.websocketService.delayTarget$;
     this.updateDate$ = this.websocketService.updated$;
+    this.data$.set(data);
   }
 
   handleReload() {

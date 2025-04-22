@@ -82,4 +82,8 @@ export class WebSocketService {
         : this.liveState$().ExtrapolatedClock.Remaining
       : undefined;
   }
+
+  get weatherInfo() {
+    return this.liveState$().WeatherData;
+  }
 }

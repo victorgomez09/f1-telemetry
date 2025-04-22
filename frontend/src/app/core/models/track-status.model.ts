@@ -1,4 +1,4 @@
 export type TrackStatus = {
-  Status: number;
+  Status: string;
   Message: string;
 };

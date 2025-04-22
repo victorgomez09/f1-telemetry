@@ -3,10 +3,10 @@ export type RaceControlMessage = {
 };
 
 type Message = {
-  Utc: Date;
-  Lap: number;
-  Category: string;
-  Flag: string;
-  Scope: string;
-  Message: string;
+  Utc: string;
+  Lap?: number;
+  Category?: string;
+  Flag?: string;
+  Scope?: string;
+  Message?: string;
 };

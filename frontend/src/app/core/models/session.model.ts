@@ -4,8 +4,8 @@ export type SessionInfo = {
   Key: number;
   Type: string;
   Name: string;
-  StartDate: Date;
-  EndDate: Date;
+  StartDate: string;
+  EndDate: string;
   GmtOffset: string;
   Path: string;
 };
