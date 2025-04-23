@@ -7,6 +7,7 @@ import { DriverPositionBatch } from './position.model';
 import { RaceControlMessage } from './race-control.model';
 import { TeamRadioType } from './radio.model';
 import { SessionInfo } from './session.model';
+import { TimmingData } from './timming-data.model';
 import { TrackStatus } from './track-status.model';
 import { WeatherData } from './weather';
 
@@ -19,6 +20,7 @@ export type LiveTimming = {
   RaceControlMessages: RaceControlMessage;
   LapCount: Laps;
   WeatherData: WeatherData;
+  TimingAppData: TimmingData;
   // positionBatches: DriverPositionBatch[];
   // teamRadios: TeamRadioType[];
   // carData: F1CarData;

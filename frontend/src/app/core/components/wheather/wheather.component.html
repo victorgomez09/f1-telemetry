@@ -2,40 +2,48 @@
   <div class="card-body !gap-4 p-2">
     <dl class="flex items-center gap-4">
       <!-- Air temp -->
-      <div class="flex items-center gap-2">
-        <dt class="truncate text-sm font-medium">Air Temp</dt>
+      <div class="flex items-baseline gap-2">
+        <dt class="truncate text-sm font-medium text-base-content/60">
+          Air Temp
+        </dt>
         <dd class="text-xl font-semibold">
           {{ airTemp }} {{ getWeatherUnit("AirTemp") }}
         </dd>
       </div>
 
       <!-- Track temp -->
-      <div class="flex items-center gap-2">
-        <dt class="truncate text-sm font-medium">Track Temp</dt>
+      <div class="flex items-baseline gap-2">
+        <dt class="truncate text-sm font-medium text-base-content/60">
+          Track Temp
+        </dt>
         <dd class="text-xl font-semibold">
           {{ trackTemp }} {{ getWeatherUnit("TrackTemp") }}
         </dd>
       </div>
 
       <!-- Humidity -->
-      <div class="flex items-center gap-2">
-        <dt class="truncate text-sm font-medium">Humidity</dt>
+      <div class="flex items-baseline gap-2">
+        <dt class="truncate text-sm font-medium text-base-content/60">
+          Humidity
+        </dt>
         <dd class="text-xl font-semibold">
           {{ humidity }} {{ getWeatherUnit("Humidity") }}
         </dd>
       </div>
 
       <!-- Rainfall -->
-      <div class="flex items-center gap-2">
-        <dt class="truncate text-sm font-medium">Rainfall</dt>
+      <div class="flex items-baseline gap-2">
+        <dt class="truncate text-sm font-medium text-base-content/60">
+          Rainfall
+        </dt>
         <dd class="text-xl font-semibold">
           {{ handleRain(rainfall) }}
         </dd>
       </div>
 
       <!-- Wind -->
-      <div class="flex items-center gap-2">
-        <dt class="truncate text-sm font-medium">Wind</dt>
+      <div class="flex items-baseline gap-2">
+        <dt class="truncate text-sm font-medium text-base-content/60">Wind</dt>
         <dd class="flex items-center gap-2 text-xl font-semibold">
           {{ windSpeed }} {{ getWeatherUnit("WindSpeed") }}
           <lucide-icon

@@ -1,0 +1,25 @@
+<div class="card bg-base-300 w-full shadow-sm">
+  <div class="card-body !gap-4 p-2">
+    <div class="grid" style="grid-template-columns: 1fr">
+      <div
+        class="grid grid-cols-[18px_42px_60px_60px_18px_74px_74px_44px_38px_auto] md:grid-cols-[21px_52px_64px_64px_21px_90px_90px_52px_45px_auto] gap-2"
+      >
+        <p>POS</p>
+        <p class="text-right">DRIVER</p>
+        <p>GEAR/RPM</p>
+        <p>SPD/PDL</p>
+        <p>DRS</p>
+        <p>TIME</p>
+        <p>GAP</p>
+        <p>TYRE</p>
+        <p>INFO</p>
+        <p>SECTORS</p>
+
+        @for (line of first10Lines; track $index) {
+        {{ line[0] | json }}
+        <!-- <app-driver [racingNumber]="driver" /> -->
+        }
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,25 +1,58 @@
 <div class="card bg-base-300 w-full shadow-sm">
   <div class="card-body p-2">
-    <div class="flex items-center justify-between gap-2">
+    <dl class="flex items-center justify-between gap-2">
       <div class="flex items-center gap-4">
         <!-- Session name -->
-        <p>
-          <strong>{{ sessionInfo.Meeting.OfficialName }}</strong
-          >,{{ " " }} {{ sessionInfo.Meeting.Circuit.ShortName }},{{ " " }}
-          {{ sessionInfo.Meeting.Country.Name }}
-        </p>
+        <div class="flex items-baseline gap-2">
+          <dt class="text-xl font-semibold">
+            {{ sessionInfo.Meeting.OfficialName }}
+          </dt>
+
+          <dd class="truncate text-sm font-medium text-base-content/60">
+            {{ sessionInfo.Meeting.Circuit.ShortName }},{{ " " }}
+            {{ sessionInfo.Meeting.Country.Name }}
+          </dd>
+        </div>
 
         <!-- Session type -->
-        <p>Session: {{ sessionInfo.Name }}</p>
+        <div class="flex items-baseline gap-2">
+          <dt class="truncate text-sm font-medium text-base-content/60">
+            Session:
+          </dt>
+          <dd class="text-xl font-semibold">
+            {{ sessionInfo.Name }}
+          </dd>
+        </div>
 
         <!-- Track status -->
-        <p>Status: {{ trackStatus.Message }}</p>
+        <div class="flex items-baseline gap-2">
+          <dt class="truncate text-sm font-medium text-base-content/60">
+            Track Status:
+          </dt>
+          <dd class="text-xl font-semibold">
+            {{ trackStatus.Message }}
+          </dd>
+        </div>
 
         <!-- Laps -->
-        <p>Lap: {{ lapsCount.CurrentLap }}/{{ lapsCount.TotalLaps }}</p>
+        <div class="flex items-baseline gap-2">
+          <dt class="truncate text-sm font-medium text-base-content/60">
+            Laps:
+          </dt>
+          <dd class="text-xl font-semibold">
+            {{ lapsCount.CurrentLap }}/{{ lapsCount.TotalLaps }}
+          </dd>
+        </div>
 
         <!-- Time remainning -->
-        <p>Remaining: {{ extrapolatedTimeRemaining }}</p>
+        <div class="flex items-baseline gap-2">
+          <dt class="truncate text-sm font-medium text-base-content/60">
+            Remaining:
+          </dt>
+          <dd class="text-xl font-semibold">
+            {{ extrapolatedTimeRemaining }}
+          </dd>
+        </div>
       </div>
 
       <!-- Connection data -->
@@ -45,6 +78,6 @@
           />
         </form>
       </div>
-    </div>
+    </dl>
   </div>
 </div>

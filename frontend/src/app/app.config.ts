@@ -1,4 +1,3 @@
-import { provideEventPlugins } from '@taiga-ui/event-plugins';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import {
   ApplicationConfig,
@@ -15,7 +14,6 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     provideExperimentalZonelessChangeDetection(),
     provideRouter(routes),
-    provideEventPlugins(),
     importProvidersFrom(LucideAngularModule.pick({ ArrowUp })),
   ],
 };

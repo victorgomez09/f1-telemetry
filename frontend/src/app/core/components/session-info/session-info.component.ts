@@ -2,15 +2,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  OnInit,
-  signal,
-  WritableSignal,
+  OnInit
 } from '@angular/core';
+import moment from 'moment';
+
 import { WebSocketService } from '../../../services/web-socket/web-socket.service';
+import { Laps } from '../../models/laps.model';
 import { SessionInfo } from '../../models/session.model';
 import { TrackStatus } from '../../models/track-status.model';
-import { Laps } from '../../models/laps.model';
-import moment from 'moment';
 
 @Component({
   selector: 'app-session-info',

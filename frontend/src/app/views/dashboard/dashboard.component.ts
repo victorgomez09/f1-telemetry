@@ -13,10 +13,11 @@ import { SessionInfoComponent } from '../../core/components/session-info/session
 import { LiveTimming } from '../../core/models/f1.model';
 import { WebSocketService } from '../../services/web-socket/web-socket.service';
 import { WheatherComponent } from "../../core/components/wheather/wheather.component";
+import { LeaderBoardComponent } from "../../core/components/leader-board/leader-board.component";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, SessionInfoComponent, WheatherComponent],
+  imports: [CommonModule, SessionInfoComponent, WheatherComponent, LeaderBoardComponent],
   templateUrl: './dashboard.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
