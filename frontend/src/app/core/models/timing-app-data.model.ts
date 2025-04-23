@@ -1,12 +1,10 @@
 import { Stint } from './stint.model';
 
-export type TimmingData = {
-  Lines: {
-    [key: string]: TimmingLine;
-  };
+export type TimingAppData = {
+  Lines: { [key: string]: TimingAppLine };
 };
 
-export type TimmingLine = {
+export type TimingAppLine = {
   RacingNumber: string;
   Line: number;
   GridPos: string;

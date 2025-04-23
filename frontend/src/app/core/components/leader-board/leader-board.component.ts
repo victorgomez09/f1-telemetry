@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 
 import { WebSocketService } from '../../../services/web-socket/web-socket.service';
-import { TimmingLine } from '../../models/timming-data.model';
+import { TimingLine } from '../../models/timing-data.model';
 import { DriverComponent } from '../driver/driver.component';
 import { CommonModule } from '@angular/common';
 
@@ -19,11 +19,11 @@ import { CommonModule } from '@angular/common';
 export class LeaderBoardComponent implements OnInit {
   private websocketService = inject(WebSocketService);
 
-  timmingData!: [string, TimmingLine][];
+  timmingData!: [string, TimingLine][];
 
   ngOnInit(): void {
     this.timmingData = Object.entries(
-      this.websocketService.liveState$().TimingAppData.Lines
+      this.websocketService.liveState$().TimingData.Lines
     ).sort(this.sortPosition);
   }
 
@@ -32,8 +32,6 @@ export class LeaderBoardComponent implements OnInit {
     const [, bLine] = b;
     const aPos = Number(aLine.Position);
     const bPos = Number(bLine.Position);
-    console.log('aPos', aPos);
-    console.log('bPos', bPos);
 
     return aPos - bPos;
   }

@@ -15,10 +15,11 @@
         <p>INFO</p>
         <p>SECTORS</p>
 
-        @for (line of first10Lines; track $index) {
-        {{ line[0] | json }}
-        <!-- <app-driver [racingNumber]="driver" /> -->
-        }
+        <div class="flex flex-col">
+          @for (line of first10Lines; track $index) {
+          <app-driver [racingNumber]="line[0]" [line]="line[1]" />
+          }
+        </div>
       </div>
     </div>
   </div>

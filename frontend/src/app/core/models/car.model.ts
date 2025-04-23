@@ -1,12 +1,12 @@
-export type F1CarData = {
-  Entries: F1Entry[];
+export type CarData = {
+  Entries: CarEntry[];
 };
 
-export type F1Entry = {
+export type CarEntry = {
   Utc: string;
   Cars: {
     [key: string]: {
-      Channels: F1CarDataChannels;
+      Channels: CarChannels;
     };
   };
 };
@@ -20,11 +20,11 @@ export type F1Entry = {
  * @property {number} 5 - Brake number boolean
  * @property {number} 45 - DRS
  */
-export type F1CarDataChannels = {
-  "0": number;
-  "2": number;
-  "3": number;
-  "4": number;
-  "5": number;
-  "45": number;
+export type CarChannels = {
+  '0': number;
+  '2': number;
+  '3': number;
+  '4': number;
+  '5': number;
+  '45': number;
 };

@@ -1,7 +1,96 @@
 <div
-  class="grid grid-cols-[18px_42px_60px_60px_18px_74px_74px_44px_38px_auto] md:grid-cols-[21px_52px_64px_64px_21px_90px_90px_52px_45px_auto] gap-2"
-></div>
+  class="grid grid-cols-[18px_42px_60px_60px_18px_74px_74px_44px_38px_auto] md:grid-cols-[21px_52px_64px_64px_21px_90px_90px_52px_45px_auto] items-center gap-2"
+  [ngClass]="{
+    'opacity-65': line.Retired || line.Stopped
+  }"
+  [ngStyle]="{ color: '#' + driver.TeamColour }"
+>
+  <!-- Position -->
+  <span>
+    <span
+      title="Position"
+      [ngClass]="
+        timingStats.Lines[racingNumber].PersonalBestLapTime.Position === 1
+          ? '!text-accent'
+          : '!text-base-content'
+      "
+    >
+      P{{ line.Position }}
+    </span>
+    <br />
+    @if (!checkGridPos) {
+    <span
+      title="Position change"
+      [ngClass]="getPosChangeColour(line.Position, timingAppData.GridPos)"
+    >
+      @if (+timingAppData.GridPos >= +line.Position) { + }
+      {{ +timingAppData.GridPos - +line.Position }}
+    </span>
+    }
+  </span>
 
-<!-- [ngClass]="{
-  'opacity-65': driver.KnockedOut || driver.Retired || driver.Stopped
-}" -->
+  <!-- Driver -->
+  <span class="text-right">
+    <span title="Driver" [ngStyle]="{ color: '#' + driver.TeamColour }">
+      {{ racingNumber }} {{ driver.Tla }}
+    </span>
+    <br />
+    <span title="Status">
+      {{
+        line.KnockedOut
+          ? "OUT"
+          : line.Retired
+          ? "RETIRED"
+          : line.Stopped
+          ? "STOPPED"
+          : line.InPit
+          ? "PIT"
+          : line.PitOut
+          ? "PIT OUT"
+          : null
+      }}
+    </span>
+  </span>
+
+  <!-- RPM -->
+  <span>
+    <span title="Gear">{{ carData["3"].toString() }}</span>
+    <span title="RPM" class="ml-2">{{ carData["0"].toString() }}</span>
+    <br />
+    <progress
+      class="progress progress-info"
+      [value]="(carData['0'] / 15000) * 100"
+      max="100"
+    ></progress>
+  </span>
+
+  <!-- Speed -->
+  <span>
+    <span title="Gear">{{ carData["2"].toString() }} km/h</span>
+    <br />
+    <progress
+      class="progress progress-success"
+      [value]="throttlePercent"
+      max="100"
+    ></progress>
+    <progress
+      class="progress progress-error"
+      [value]="brakePercent"
+      max="100"
+    ></progress>
+  </span>
+
+  <!-- DRS -->
+  <span
+    [title]="
+      'DRS' + drsEnabledValues.includes(carData['45']) ? 'active' : 'inactive'
+    "
+    [ngClass]="
+      drsEnabledValues.includes(carData['45'])
+        ? 'text-sucess'
+        : 'text-base-content'
+    "
+  >
+    DRS
+  </span>
+</div>
