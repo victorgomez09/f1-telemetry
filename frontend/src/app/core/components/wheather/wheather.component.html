@@ -1,45 +1,50 @@
 <div class="card bg-base-300 w-full shadow-sm">
-  <div class="card-body p-2">
-    <div class="flex items-center gap-2">
-      <!-- AIR TMP -->
-      <div
-        class="flex h-[55px] w-[55px] items-center justify-center rounded-full bg-black"
-      >
-        <app-gauge [value]="airTemp" [max]="45" gradient="temperature" />
-
-        <div class="mt-2 flex flex-col items-center gap-0.5">
-          <p
-            class="flex h-[22px] shrink-0 text-xl font-medium not-italic leading-[normal] text-[color:var(--Base-Text,#F2F2F2)]"
-          >
-            {{ airTemp }}
-          </p>
-          <p
-            class="flex h-[11px] shrink-0 text-center text-[10px] font-medium not-italic leading-[normal] text-[color:var(--Multicolor-Green,#67E151)]"
-          >
-            AIR
-          </p>
-        </div>
+  <div class="card-body !gap-4 p-2">
+    <dl class="flex items-center gap-4">
+      <!-- Air temp -->
+      <div class="flex items-center gap-2">
+        <dt class="truncate text-sm font-medium">Air Temp</dt>
+        <dd class="text-xl font-semibold">
+          {{ airTemp }} {{ getWeatherUnit("AirTemp") }}
+        </dd>
       </div>
 
-      <!-- TRACK TMP -->
-      <div
-        class="flex h-[55px] w-[55px] items-center justify-center rounded-full bg-black"
-      >
-        <app-gauge [value]="trackTemp" [max]="60" gradient="temperature" />
-
-        <div class="mt-2 flex flex-col items-center gap-0.5">
-          <p
-            class="flex h-[22px] shrink-0 text-xl font-medium not-italic leading-[normal] text-[color:var(--Base-Text,#F2F2F2)]"
-          >
-            {{ trackTemp }}
-          </p>
-          <p
-            class="flex h-[11px] shrink-0 text-center text-[10px] font-medium not-italic leading-[normal] text-[color:var(--Multicolor-Green,#67E151)]"
-          >
-            TCR
-          </p>
-        </div>
+      <!-- Track temp -->
+      <div class="flex items-center gap-2">
+        <dt class="truncate text-sm font-medium">Track Temp</dt>
+        <dd class="text-xl font-semibold">
+          {{ trackTemp }} {{ getWeatherUnit("TrackTemp") }}
+        </dd>
       </div>
-    </div>
+
+      <!-- Humidity -->
+      <div class="flex items-center gap-2">
+        <dt class="truncate text-sm font-medium">Humidity</dt>
+        <dd class="text-xl font-semibold">
+          {{ humidity }} {{ getWeatherUnit("Humidity") }}
+        </dd>
+      </div>
+
+      <!-- Rainfall -->
+      <div class="flex items-center gap-2">
+        <dt class="truncate text-sm font-medium">Rainfall</dt>
+        <dd class="text-xl font-semibold">
+          {{ handleRain(rainfall) }}
+        </dd>
+      </div>
+
+      <!-- Wind -->
+      <div class="flex items-center gap-2">
+        <dt class="truncate text-sm font-medium">Wind</dt>
+        <dd class="flex items-center gap-2 text-xl font-semibold">
+          {{ windSpeed }} {{ getWeatherUnit("WindSpeed") }}
+          <lucide-icon
+            name="arrow-up"
+            class="size-6"
+            [style.transform]="'rotate(' + windDirection + 'deg)'"
+          ></lucide-icon>
+        </dd>
+      </div>
+    </dl>
   </div>
 </div>
