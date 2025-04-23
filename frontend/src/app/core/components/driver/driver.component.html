@@ -1,16 +1,16 @@
+<!-- [ngStyle]="{ color: '#' + driver.TeamColour }" -->
 <div
   class="grid grid-cols-[18px_42px_60px_60px_18px_74px_74px_44px_38px_auto] md:grid-cols-[21px_52px_64px_64px_21px_90px_90px_52px_45px_auto] items-center gap-2"
   [ngClass]="{
     'opacity-65': line.Retired || line.Stopped
   }"
-  [ngStyle]="{ color: '#' + driver.TeamColour }"
 >
-  <!-- Position -->
+  <!-- POSITION -->
   <span>
     <span
       title="Position"
       [ngClass]="
-        timingStats.Lines[racingNumber].PersonalBestLapTime.Position === 1
+        timingStats.PersonalBestLapTime.Position === 1
           ? '!text-accent'
           : '!text-base-content'
       "
@@ -21,7 +21,7 @@
     @if (!checkGridPos) {
     <span
       title="Position change"
-      [ngClass]="getPosChangeColour(line.Position, timingAppData.GridPos)"
+      [ngClass]="parsePosChangeColour(line.Position, timingAppData.GridPos)"
     >
       @if (+timingAppData.GridPos >= +line.Position) { + }
       {{ +timingAppData.GridPos - +line.Position }}
@@ -29,7 +29,7 @@
     }
   </span>
 
-  <!-- Driver -->
+  <!-- DRIVER -->
   <span class="text-right">
     <span title="Driver" [ngStyle]="{ color: '#' + driver.TeamColour }">
       {{ racingNumber }} {{ driver.Tla }}
@@ -64,7 +64,7 @@
     ></progress>
   </span>
 
-  <!-- Speed -->
+  <!-- SPEED -->
   <span>
     <span title="Gear">{{ carData["2"].toString() }} km/h</span>
     <br />
@@ -92,5 +92,90 @@
     "
   >
     DRS
+  </span>
+
+  <!-- TIME -->
+  <span>
+    <span title="Last lap">
+      Lst
+      <span
+        [ngClass]="
+          line.LastLapTime.Value && line.LastLapTime.OverallFastest
+            ? 'text-accent'
+            : line.LastLapTime.Value && line.LastLapTime.PersonalFastest
+            ? 'text-success'
+            : 'text-base-content'
+        "
+      >
+        {{ line.LastLapTime.Value || "—" }}
+      </span>
+    </span>
+    <br />
+    <span title="Best lap">
+      Bst
+      <span
+        [ngClass]="
+          line.BestLapTime.Value &&
+          (line.BestLapTime.OverallFastest ||
+            timingStats.PersonalBestLapTime.Position === 1)
+            ? 'text-accent'
+            : 'text-base-content'
+        "
+      >
+        {{ line.BestLapTime.Value || "—" }}
+      </span>
+    </span>
+  </span>
+
+  <!-- GAP -->
+  <span>
+    <span
+      [title]="
+        'Gap to car ahead' + line.IntervalToPositionAhead.Catching
+          ? ' (catching)'
+          : ''
+      "
+    >
+      Int
+      <span
+        [ngClass]="
+          line.IntervalToPositionAhead.Catching
+            ? 'text-success'
+            : 'text-base-content'
+        "
+      >
+        @if (lineStats.length) {
+        {{
+          line.IntervalToPositionAhead.Value ||
+            lineStats[lineStats.length - 1].TimeDifftoPositionAhead ||
+            "-"
+        }}
+        } @else { - }
+      </span>
+    </span>
+    <br />
+    <span title="Gap to leader">
+      Ldr @if (lineStats.length) {
+      {{
+        line.GapToLeader || lineStats[lineStats.length - 1].TimeDiffToFastest
+      }}
+      } @else { - }
+    </span>
+  </span>
+
+  <!-- TYRES -->
+  <span>
+    <span title="Tyre compound" class="flex items-center">
+      Cmp
+      <span class="ml-1" [ngClass]="parseTyreColour(currentStint.Compound)">
+        {{ currentStint.Compound[0] || "—" }}
+      </span>
+    </span>
+    <span
+      [title]="'Tyre age' + currentStint.New === 'false' ? ' (not fresh)' : ''"
+    >
+      Age {{ currentStint.TotalLaps }}
+      @if (currentStint.New === "false") { * }
+    </span>
   </span>
 </div>

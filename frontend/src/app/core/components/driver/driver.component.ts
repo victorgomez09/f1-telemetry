@@ -26,11 +26,28 @@ export class DriverComponent {
   @Input()
   line!: TimingLine;
 
-  getPosChangeColour(pos: string, gridPos: string) {
+  parsePosChangeColour(pos: string, gridPos: string) {
     if (Number(pos) < Number(gridPos)) return 'text-success';
     if (Number(pos) > Number(gridPos)) return 'text-error';
 
     return 'text-base-content';
+  }
+
+  parseTyreColour(compound: string) {
+    switch (compound?.toLowerCase()) {
+      case 'soft':
+        return 'text-error';
+      case 'medium':
+        return 'text-warning';
+      case 'hard':
+        return 'text-base-content';
+      case 'intermediate':
+        return 'text-success';
+      case 'wet':
+        return 'text-info';
+      default:
+        return 'text-base-content';
+    }
   }
 
   get driver() {
@@ -38,7 +55,9 @@ export class DriverComponent {
   }
 
   get timingStats() {
-    return this.websocketService.liveState$().TimingStats;
+    return this.websocketService.liveState$().TimingStats.Lines[
+      this.racingNumber
+    ];
   }
 
   get timingAppData() {
@@ -63,5 +82,15 @@ export class DriverComponent {
 
   get brakePercent() {
     return Math.min(100, this.carData['5']);
+  }
+
+  get lineStats(): any[] {
+    return Object.values(this.line.Stats ?? ({} as any));
+  }
+
+  get currentStint() {
+    return Object.values(this.timingAppData.Stints)[
+      Object.values(this.timingAppData.Stints).length - 1
+    ];
   }
 }

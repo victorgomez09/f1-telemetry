@@ -21,13 +21,14 @@ export type TimingLine = {
   NumberOfPitStops?: number;
   Sectors: Sector[];
   Speeds: Speed;
-  BestLapTime: { Value: string; Lap?: number };
+  BestLapTime: { Value: string; Lap?: number; OverallFastest?: boolean };
   LastLapTime: {
     Value: string;
     Status: number;
     OverallFastest: boolean;
     PersonalFastest: boolean;
   };
+  Stats?: any;
 };
 
 export type Sector = {
