@@ -7,7 +7,7 @@ import {
 import { CommonModule } from '@angular/common';
 
 import { Driver } from '../../models/driver.model';
-import { TimingLine } from '../../models/timing-data.model';
+import { Sector, SectorSegment, TimingLine } from '../../models/timing-data.model';
 import { WebSocketService } from '../../../services/web-socket/web-socket.service';
 
 @Component({
@@ -49,6 +49,27 @@ export class DriverComponent {
         return 'text-base-content';
     }
   }
+
+  parseSectorSegment(sector: Sector): SectorSegment[] {
+    return (Array.isArray(sector.Segments)
+      ? sector.Segments
+      : Object.values(sector.Segments ?? {}))
+  }
+
+  parseSegmentColour(status: number) {
+    switch (status) {
+      case 2048:
+        return "bg-warning";
+      case 2049:
+        return "bg-success";
+      case 2051:
+        return "bg-accent";
+      case 2064:
+        return "bg-info";
+      default:
+        return "bg-base-content/50";
+    }
+  };
 
   get driver() {
     return this.websocketService.liveState$().DriverList[this.racingNumber];
@@ -92,5 +113,11 @@ export class DriverComponent {
     return Object.values(this.timingAppData.Stints)[
       Object.values(this.timingAppData.Stints).length - 1
     ];
+  }
+
+  get sectors(): Sector[] {
+    return (Array.isArray(this.line.Sectors)
+      ? this.line.Sectors
+      : Object.values(this.line.Sectors ?? {}))
   }
 }

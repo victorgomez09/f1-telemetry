@@ -1,22 +1,44 @@
 <div class="card bg-base-300 w-full shadow-sm">
-  <div class="card-body !gap-4 p-2">
-    <div class="grid" style="grid-template-columns: 1fr">
-      <div
-        class="grid grid-cols-[18px_42px_60px_60px_18px_74px_74px_44px_38px_auto] md:grid-cols-[21px_52px_64px_64px_21px_90px_90px_52px_45px_auto] gap-2"
-      >
-        <p>POS</p>
-        <p class="text-right">DRIVER</p>
-        <p>GEAR/RPM</p>
-        <p>SPD/PDL</p>
-        <p>DRS</p>
-        <p>TIME</p>
-        <p>GAP</p>
-        <p>TYRE</p>
-        <p>INFO</p>
-        <p>SECTORS</p>
+  <div class="card-body !gap-4 p-0">
+    <div class="flex">
+      <!-- style="grid-template-columns: 1fr" -->
+      <div class="grid grid-cols-[50%_50%] w-full">
+        <div>
+          <div
+            class="grid grid-cols-[2em_4em_10em_10em_4em_12em_12em_4em_4em_auto] md:grid-cols-[3em_5em_6.5em_8em_4em_7em_5em_5em_5em_auto] border-b border-base-100 p-2">
+            <p class="font-semibold">POS</p>
+            <p class="font-semibold">DRIVER</p>
+            <p class="font-semibold">GEAR/RPM</p>
+            <p class="font-semibold">SPD/PDL</p>
+            <p class="font-semibold">DRS</p>
+            <p class="font-semibold">TIME</p>
+            <p class="font-semibold">GAP</p>
+            <p class="font-semibold">TYRE</p>
+            <p class="font-semibold">INFO</p>
+            <p class="font-semibold">SECTORS</p>
+          </div>
 
-        <div class="flex flex-col">
           @for (line of first10Lines; track $index) {
+          <app-driver [racingNumber]="line[0]" [line]="line[1]" />
+          }
+        </div>
+
+        <div>
+          <div
+            class="grid grid-cols-[18px_42px_60px_60px_18px_74px_74px_44px_38px_auto] md:grid-cols-[3em_5em_6.5em_8em_4em_7em_5em_5em_5em_auto] border-b border-base-100 p-2">
+            <p class="font-semibold">POS</p>
+            <p class="font-semibold">DRIVER</p>
+            <p class="font-semibold">GEAR/RPM</p>
+            <p class="font-semibold">SPD/PDL</p>
+            <p class="font-semibold">DRS</p>
+            <p class="font-semibold">TIME</p>
+            <p class="font-semibold">GAP</p>
+            <p class="font-semibold">TYRE</p>
+            <p class="font-semibold">INFO</p>
+            <p class="font-semibold">SECTORS</p>
+          </div>
+
+          @for (line of last10Lines; track $index) {
           <app-driver [racingNumber]="line[0]" [line]="line[1]" />
           }
         </div>

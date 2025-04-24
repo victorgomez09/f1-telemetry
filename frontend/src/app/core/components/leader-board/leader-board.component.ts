@@ -39,4 +39,8 @@ export class LeaderBoardComponent implements OnInit {
   get first10Lines() {
     return this.timmingData.slice(0, 10);
   }
+
+  get last10Lines() {
+    return this.timmingData.slice(10, 20);
+  }
 }

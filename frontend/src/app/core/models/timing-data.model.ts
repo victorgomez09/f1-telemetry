@@ -34,12 +34,16 @@ export type TimingLine = {
 export type Sector = {
   Stopped: boolean;
   PreviousValue?: string;
-  Segments: { Status: number }[];
+  Segments: SectorSegment[];
   Value: string;
   Status: number;
   OverallFastest: boolean;
   PersonalFastest: boolean;
 };
+
+export type SectorSegment = {
+  Status: number
+}
 
 export type Speed = {
   I1: {
