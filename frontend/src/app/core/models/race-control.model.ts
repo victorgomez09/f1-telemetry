@@ -2,7 +2,7 @@ export type RaceControlMessage = {
   Messages: Message[];
 };
 
-type Message = {
+export type Message = {
   Utc: string;
   Lap?: number;
   Category?: string;

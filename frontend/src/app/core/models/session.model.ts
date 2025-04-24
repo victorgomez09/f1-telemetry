@@ -34,3 +34,19 @@ export type SessionCircuit = {
 export type SessionArchive = {
   Status: string;
 };
+
+export type SessionData = {
+  Series: SessionDataSerie[]
+  StatusSeries: SessionStatusSeries[]
+}
+
+export type SessionDataSerie = {
+  Utc: string;
+  Lap: number;
+}
+
+export type SessionStatusSeries = {
+  Utc: string;
+  TrackStatus?: string;
+  SessionStatus?: string;
+}

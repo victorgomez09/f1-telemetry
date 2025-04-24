@@ -1,14 +1,9 @@
-export type TeamRadioType = {
-  driverNr: string;
+export type TeamRadio = {
+  Captures: TeamRadioCapture[];
+};
 
-  broadcastName: string;
-  fullName: string;
-  firstName: string;
-  lastName: string;
-  short: string;
-
-  teamColor: string;
-
-  utc: string;
-  audioUrl: string;
+export type TeamRadioCapture = {
+  Utc: string;
+  RacingNumber: string;
+  Path: string;
 };

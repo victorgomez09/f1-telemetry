@@ -1,0 +1,30 @@
+<div class="card bg-base-300 w-full shadow-sm h-96">
+  <div class="card-body p-2 overflow-y-scroll">
+    <ul class="list p-0">
+      <li class="text-xs opacity-60 tracking-wide">RACE CONTROL MESSAGES</li>
+
+      @for (event of events; track $index) {
+      <li class="list-row p-2">
+        <div class="flex items-center gap-2">
+          <span class="flex items-center gap-2">
+            {{ formatDate(event.Utc) }}
+            @if (event.Lap) { / Lap {{ event.Lap }}
+            }
+          </span>
+          @if (event.Category === "Flag") {
+          <span class="badge" [ngClass]="getFlagColour(event.Flag || '')">
+            FLAG
+          </span>
+          } @if (event.Message) {
+          <span>{{ event.Message.trim() }}</span>
+          } @if (event.TrackStatus) {
+          <span>Track status: {{ event.TrackStatus }}</span>
+          } @if (event.SessionStatus) {
+          <span>Session status: {{ event.SessionStatus }}</span>
+          }
+        </div>
+      </li>
+      }
+    </ul>
+  </div>
+</div>

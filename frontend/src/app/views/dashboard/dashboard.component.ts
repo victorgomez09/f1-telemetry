@@ -9,15 +9,26 @@ import {
 import moment from 'moment';
 
 import data from '../../../../EXAMPLE_DATA.json';
+import { LeaderBoardComponent } from '../../core/components/leader-board/leader-board.component';
+import { MapComponent } from '../../core/components/map/map.component';
 import { SessionInfoComponent } from '../../core/components/session-info/session-info.component';
+import { WheatherComponent } from '../../core/components/wheather/wheather.component';
 import { LiveTimming } from '../../core/models/f1.model';
 import { WebSocketService } from '../../services/web-socket/web-socket.service';
-import { WheatherComponent } from "../../core/components/wheather/wheather.component";
-import { LeaderBoardComponent } from "../../core/components/leader-board/leader-board.component";
+import { RaceControlComponent } from '../../core/components/race-control/race-control.component';
+import { TeamRadioComponent } from '../../core/components/team-radio/team-radio.component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, SessionInfoComponent, WheatherComponent, LeaderBoardComponent],
+  imports: [
+    CommonModule,
+    SessionInfoComponent,
+    WheatherComponent,
+    LeaderBoardComponent,
+    MapComponent,
+    RaceControlComponent,
+    TeamRadioComponent,
+  ],
   templateUrl: './dashboard.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

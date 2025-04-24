@@ -4,7 +4,8 @@ import { Driver } from './driver.model';
 import { Heartbeat } from './hearthbeat.model';
 import { Laps } from './laps.model';
 import { RaceControlMessage } from './race-control.model';
-import { SessionInfo } from './session.model';
+import { TeamRadio } from './radio.model';
+import { SessionData, SessionInfo } from './session.model';
 import { TimingAppData } from './timing-app-data.model';
 import { TimingData } from './timing-data.model';
 import { TimingStats } from './timing-stats.model';
@@ -24,6 +25,7 @@ export type LiveTimming = {
   TimingStats: TimingStats;
   TimingAppData: TimingAppData;
   CarData: CarData;
+  SessionData: SessionData;
+  TeamRadio: TeamRadio;
   // positionBatches: DriverPositionBatch[];
-  // teamRadios: TeamRadioType[];
 };

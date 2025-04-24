@@ -7,13 +7,13 @@ import {
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import { ArrowUp, LucideAngularModule } from 'lucide-angular';
+import { ArrowUp, LucideAngularModule, Play } from 'lucide-angular';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimations(),
     provideExperimentalZonelessChangeDetection(),
     provideRouter(routes),
-    importProvidersFrom(LucideAngularModule.pick({ ArrowUp })),
+    importProvidersFrom(LucideAngularModule.pick({ ArrowUp, Play })),
   ],
 };

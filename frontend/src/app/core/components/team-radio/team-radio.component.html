@@ -1,0 +1,31 @@
+<div class="card bg-base-300 w-full shadow-sm h-96">
+  <div class="card-body p-2 overflow-y-scroll">
+    <ul class="list p-0">
+      <li class="text-xs opacity-60 tracking-wide">TEAM RADIOS</li>
+
+      @for (radio of radios; track $index) {
+      <li class="list-row p-2">
+        <div class="grid grid-cols-10">
+          <span class="col-span-2">{{ formatDate(radio.Utc) }}</span>
+
+          <span
+            [ngStyle]="{ color: '#' + drivers[radio.RacingNumber].TeamColour }"
+          >
+            {{ radio.RacingNumber }} {{ drivers[radio.RacingNumber].Tla }}
+          </span>
+
+          <!-- onClick={() => setPlaying((p) => !p)} -->
+          <!-- <button>
+            {{ secondsToMinutes(progress$()) }} /
+            {{ secondsToMinutes(duration$()) }}
+          </button> -->
+          <button class="btn btn-sm btn-ghost" (click)="playAudio(radio.Path)">
+            <lucide-icon name="play" class="size-4"></lucide-icon>
+          </button>
+          <progress class="progress" value="40" max="100"></progress>
+        </div>
+      </li>
+      }
+    </ul>
+  </div>
+</div>
