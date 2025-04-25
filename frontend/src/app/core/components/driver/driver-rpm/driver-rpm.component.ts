@@ -15,4 +15,13 @@ export class DriverRpmComponent {
 
   @Input({ required: true })
   rpms!: number;
+
+  @Input({ required: true })
+  speed!: number;
+
+  @Input({ required: true })
+  throttlePercent!: number;
+
+  @Input({ required: true })
+  brakePercent!: number;
 }

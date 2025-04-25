@@ -32,13 +32,6 @@ export class DriverComponent {
   @Input()
   line!: TimingLine;
 
-  parsePosChangeColour(pos: string, gridPos: string) {
-    if (Number(pos) < Number(gridPos)) return 'text-success';
-    if (Number(pos) > Number(gridPos)) return 'text-error';
-
-    return 'text-base-content';
-  }
-
   parseTyreColour(compound: string) {
     switch (compound?.toLowerCase()) {
       case 'soft':

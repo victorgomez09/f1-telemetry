@@ -1,13 +1,27 @@
-<span
-  class="text-md inline-flex h-8 w-10/12 items-center justify-center rounded-md border-2 font-mono font-black"
-  [ngClass]="{
-    'border-base-content/50 text-base-content/50':
-      !(inPit || pitOut) && !on && !possible,
-    'border-base-content text-base-content':
-      !(inPit || pitOut) && !on && possible,
-    'border-info text-info': !(inPit || pitOut) && on,
-    'border-success text-success': inPit || pitOut
-  }"
->
-  {{ inPit || pitOut ? "PIT" : "DRS" }}
-</span>
+<div class="flex flex-col">
+  <div class="flex items-center gap-2 font-semibold text-center">
+    @if (!checkGridPos) {
+    <span
+      title="Position change"
+      [ngClass]="parsePosChangeColour(position, gridPosition)"
+    >
+      @if (+gridPosition >= +position) { + }
+      {{ +gridPosition - +position }}
+    </span>
+    }
+  </div>
+
+  <span
+    class="text-md inline-flex h-8 w-5/12 items-center justify-center rounded-md border-2 font-mono font-black"
+    [ngClass]="{
+      'border-base-content/50 text-base-content/50':
+        !(inPit || pitOut) && !on && !possible,
+      'border-base-content text-base-content':
+        !(inPit || pitOut) && !on && possible,
+      'border-info text-info': !(inPit || pitOut) && on,
+      'border-success text-success': inPit || pitOut
+    }"
+  >
+    {{ getStatus() }}
+  </span>
+</div>
