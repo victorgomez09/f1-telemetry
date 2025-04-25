@@ -1,5 +1,5 @@
 <div
-  class="grid grid-cols-[5em_6.5em_8em_7em_5em_5em_5em_auto] md:grid-cols-[5em_6.5em_14em_7em_5em_5em_5em_auto] items-center border-b border-base-100 p-1"
+  class="grid grid-cols-[5em_6.5em_8em_7em_5em_5em_auto] md:grid-cols-[5em_6.5em_14em_7em_5em_5em_auto] items-center border-b border-base-100 p-1"
   [ngClass]="{
     'opacity-65': line.Retired || line.Stopped
   }"
@@ -109,11 +109,11 @@
   <app-driver-tire [stints]="stints" />
 
   <!-- INFO -->
-  <span>
+  <!-- <span>
     <span title="Completed laps">Lap {{ line.NumberOfLaps || "—" }}</span>
     <br />
     <span title="Pit stops">Stp {{ line.NumberOfPitStops || "—" }}</span>
-  </span>
+  </span> -->
 
   <!-- SECTORS -->
   <span class="flex items-center gap-2">
