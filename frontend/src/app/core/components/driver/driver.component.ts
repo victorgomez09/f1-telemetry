@@ -14,11 +14,18 @@ import {
 import { WebSocketService } from '../../../services/web-socket/web-socket.service';
 import { DriverTagComponent } from './driver-tag/driver-tag.component';
 import { DriverDrsComponent } from './driver-drs/driver-drs.component';
-import { DriverRpmComponent } from "./driver-rpm/driver-rpm.component";
+import { DriverRpmComponent } from './driver-rpm/driver-rpm.component';
+import { DriverTireComponent } from './driver-tire/driver-tire.component';
 
 @Component({
   selector: 'app-driver',
-  imports: [CommonModule, DriverTagComponent, DriverDrsComponent, DriverRpmComponent],
+  imports: [
+    CommonModule,
+    DriverTagComponent,
+    DriverDrsComponent,
+    DriverRpmComponent,
+    DriverTireComponent,
+  ],
   templateUrl: './driver.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -95,7 +102,9 @@ export class DriverComponent {
   }
 
   get timmingData() {
-    return this.websocketService.liveState$().TimingData.Lines[this.racingNumber]
+    return this.websocketService.liveState$().TimingData.Lines[
+      this.racingNumber
+    ];
   }
 
   get checkGridPos() {
@@ -118,6 +127,10 @@ export class DriverComponent {
 
   get lineStats(): any[] {
     return Object.values(this.line.Stats ?? ({} as any));
+  }
+
+  get stints() {
+    return Object.values(this.timingAppData.Stints);
   }
 
   get currentStint() {

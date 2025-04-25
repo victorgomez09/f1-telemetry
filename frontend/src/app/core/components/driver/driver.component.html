@@ -36,9 +36,9 @@
   />
 
   <!-- TIME -->
-  <span>
-    <span title="Last lap">
-      Lst
+  <div class="flex flex-col">
+    <div title="Last lap">
+      <span class="font-semibold">Lst</span>
       <span
         [ngClass]="
           line.LastLapTime.Value && line.LastLapTime.OverallFastest
@@ -50,10 +50,10 @@
       >
         {{ line.LastLapTime.Value || "—" }}
       </span>
-    </span>
-    <br />
-    <span title="Best lap">
-      Bst
+    </div>
+
+    <div title="Best lap">
+      <span class="font-semibold">Bst</span>
       <span
         [ngClass]="
           line.BestLapTime.Value &&
@@ -65,19 +65,19 @@
       >
         {{ line.BestLapTime.Value || "—" }}
       </span>
-    </span>
-  </span>
+    </div>
+  </div>
 
   <!-- GAP -->
-  <span>
-    <span
+  <div class="flex flex-col">
+    <div
       [title]="
         'Gap to car ahead' + line.IntervalToPositionAhead.Catching
           ? ' (catching)'
           : ''
       "
     >
-      Int
+      <span class="font-semibold">Int</span>
       <span
         [ngClass]="
           line.IntervalToPositionAhead.Catching
@@ -93,32 +93,20 @@
         }}
         } @else { - }
       </span>
-    </span>
-    <br />
+    </div>
+
     <span title="Gap to leader">
-      Ldr @if (lineStats.length) {
+      <span class="font-semibold">Ldr</span>
+      @if (lineStats.length) {
       {{
         line.GapToLeader || lineStats[lineStats.length - 1].TimeDiffToFastest
       }}
       } @else { - }
     </span>
-  </span>
+  </div>
 
-  <!-- TYRES -->
-  <span>
-    <span title="Tyre compound" class="flex items-center">
-      Cmp
-      <span class="ml-1" [ngClass]="parseTyreColour(currentStint.Compound)">
-        {{ currentStint.Compound[0] || "—" }}
-      </span>
-    </span>
-    <span
-      [title]="'Tyre age' + currentStint.New === 'false' ? ' (not fresh)' : ''"
-    >
-      Age {{ currentStint.TotalLaps }}
-      @if (currentStint.New === "false") { * }
-    </span>
-  </span>
+  <!-- TIRE -->
+  <app-driver-tire [stints]="stints" />
 
   <!-- INFO -->
   <span>

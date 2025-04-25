@@ -1,0 +1,29 @@
+<div
+  class="flex flex-row items-center gap-1 place-self-start"
+  id="walkthrough-driver-tire"
+>
+  @if (currentStint && !unknownCompound && currentStint.Compound) {
+  <img
+    class="size-6"
+    [src]="'/tires/' + currentStint.Compound.toLowerCase() + '.svg'"
+    [alt]="currentStint.Compound"
+  />
+  } @if (currentStint && unknownCompound) {
+  <div class="flex h-8 w-8 items-center justify-center">
+    <img class="size-6" [src]="'/tires/unknown.svg'" [alt]="'unknown'" />
+  </div>
+  } @if(!currentStint) {
+  <div
+    class="h-8 w-8 animate-pulse rounded-full bg-zinc-800 font-semibold"
+  ></div>
+  }
+
+  <div>
+    <p class="font-bold leading-none">
+      L {{ currentStint?.TotalLaps || 0 }} {{ currentStint?.New ? "" : "*" }}
+    </p>
+    <p class="text-sm font-medium leading-none text-zinc-600">
+      PIT {{ stops }}
+    </p>
+  </div>
+</div>
