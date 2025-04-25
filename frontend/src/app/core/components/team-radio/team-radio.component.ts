@@ -9,10 +9,11 @@ import { WebSocketService } from '../../../services/web-socket/web-socket.servic
 import moment from 'moment';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
+import { AudioPlayerComponent } from "../audio-player/audio-player.component";
 
 @Component({
   selector: 'app-team-radio',
-  imports: [CommonModule, LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule, AudioPlayerComponent],
   templateUrl: './team-radio.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -38,21 +39,6 @@ export class TeamRadioComponent {
     return `https://livetiming.formula1.com/static/${
       this.websocketService.liveState$().SessionInfo.Path
     }${path}`;
-  }
-
-  playAudio(path: string) {
-    let audio = new Audio(
-      `https://livetiming.formula1.com/static/${
-        this.websocketService.liveState$().SessionInfo.Path
-      }${path}`
-    );
-    audio.preload = 'metadata';
-    audio.onloadedmetadata = () => {
-      console.log('duration', audio.duration);
-      this.duration$.set(audio.duration);
-    };
-    audio.play();
-    this.playing$.set(true);
   }
 
   private pad(n: number, l: number) {

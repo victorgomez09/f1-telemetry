@@ -1,46 +1,55 @@
 <!-- [ngStyle]="{ color: '#' + driver.TeamColour }" -->
 <div
-  class="grid grid-cols-[3em_5em_6.5em_8em_4em_7em_5em_5em_5em_auto] md:grid-cols-[3em_5em_6.5em_8em_4em_7em_5em_5em_5em_auto] items-center border-b border-base-100 p-2"
+  class="grid grid-cols-[5em_6.5em_8em_4em_7em_5em_5em_5em_auto] md:grid-cols-[5em_6.5em_8em_4em_7em_5em_5em_5em_auto] items-center border-b border-base-100 p-2"
   [ngClass]="{
     'opacity-65': line.Retired || line.Stopped
-  }">
+  }"
+>
   <!-- POSITION -->
-  <span>
-    <span title="Position" [ngClass]="
+  <!-- <span>
+    <span
+      title="Position"
+      [ngClass]="
         timingStats.PersonalBestLapTime.Position === 1
           ? '!text-accent'
           : '!text-base-content'
-      ">
+      "
+    >
       P{{ line.Position }}
     </span>
     <br />
     @if (!checkGridPos) {
-    <span title="Position change" [ngClass]="parsePosChangeColour(line.Position, timingAppData.GridPos)">
+    <span
+      title="Position change"
+      [ngClass]="parsePosChangeColour(line.Position, timingAppData.GridPos)"
+    >
       @if (+timingAppData.GridPos >= +line.Position) { + }
       {{ +timingAppData.GridPos - +line.Position }}
     </span>
     }
-  </span>
+  </span> -->
 
   <!-- DRIVER -->
   <span>
-    <span title="Driver" [ngStyle]="{ color: '#' + driver.TeamColour }">
-      {{ racingNumber }} {{ driver.Tla }}
-    </span>
+    <app-driver-tag
+      [teamColor]="driver.TeamColour"
+      [short]="driver.Tla"
+      [position]="line.Position"
+    />
     <br />
     <span title="Status">
       {{
-      line.KnockedOut
-      ? "OUT"
-      : line.Retired
-      ? "RETIRED"
-      : line.Stopped
-      ? "STOPPED"
-      : line.InPit
-      ? "PIT"
-      : line.PitOut
-      ? "PIT OUT"
-      : null
+        line.KnockedOut
+          ? "OUT"
+          : line.Retired
+          ? "RETIRED"
+          : line.Stopped
+          ? "STOPPED"
+          : line.InPit
+          ? "PIT"
+          : line.PitOut
+          ? "PIT OUT"
+          : null
       }}
     </span>
   </span>
@@ -50,25 +59,40 @@
     <span title="Gear">{{ carData["3"].toString() }}</span>
     <span title="RPM" class="ml-2">{{ carData["0"].toString() }}</span>
     <br />
-    <progress class="progress progress-info w-10/12" [value]="(carData['0'] / 15000) * 100" max="100"></progress>
+    <progress
+      class="progress progress-info w-10/12"
+      [value]="(carData['0'] / 15000) * 100"
+      max="100"
+    ></progress>
   </span>
 
   <!-- SPEED -->
   <span>
     <span title="Gear">{{ carData["2"].toString() }} km/h</span>
     <br />
-    <progress class="progress progress-success w-10/12" [value]="throttlePercent" max="100"></progress>
-    <progress class="progress progress-error w-10/12" [value]="brakePercent" max="100"></progress>
+    <progress
+      class="progress progress-success w-10/12"
+      [value]="throttlePercent"
+      max="100"
+    ></progress>
+    <progress
+      class="progress progress-error w-10/12"
+      [value]="brakePercent"
+      max="100"
+    ></progress>
   </span>
 
   <!-- DRS -->
-  <span [title]="
+  <span
+    [title]="
       'DRS' + drsEnabledValues.includes(carData['45']) ? 'active' : 'inactive'
-    " [ngClass]="
+    "
+    [ngClass]="
       drsEnabledValues.includes(carData['45'])
         ? 'text-sucess'
         : 'text-base-content'
-    ">
+    "
+  >
     DRS
   </span>
 
@@ -76,26 +100,30 @@
   <span>
     <span title="Last lap">
       Lst
-      <span [ngClass]="
+      <span
+        [ngClass]="
           line.LastLapTime.Value && line.LastLapTime.OverallFastest
             ? 'text-accent'
             : line.LastLapTime.Value && line.LastLapTime.PersonalFastest
             ? 'text-success'
             : 'text-base-content'
-        ">
+        "
+      >
         {{ line.LastLapTime.Value || "—" }}
       </span>
     </span>
     <br />
     <span title="Best lap">
       Bst
-      <span [ngClass]="
+      <span
+        [ngClass]="
           line.BestLapTime.Value &&
           (line.BestLapTime.OverallFastest ||
             timingStats.PersonalBestLapTime.Position === 1)
             ? 'text-accent'
             : 'text-base-content'
-        ">
+        "
+      >
         {{ line.BestLapTime.Value || "—" }}
       </span>
     </span>
@@ -103,22 +131,26 @@
 
   <!-- GAP -->
   <span>
-    <span [title]="
+    <span
+      [title]="
         'Gap to car ahead' + line.IntervalToPositionAhead.Catching
           ? ' (catching)'
           : ''
-      ">
+      "
+    >
       Int
-      <span [ngClass]="
+      <span
+        [ngClass]="
           line.IntervalToPositionAhead.Catching
             ? 'text-success'
             : 'text-base-content'
-        ">
+        "
+      >
         @if (lineStats.length) {
         {{
-        line.IntervalToPositionAhead.Value ||
-        lineStats[lineStats.length - 1].TimeDifftoPositionAhead ||
-        "-"
+          line.IntervalToPositionAhead.Value ||
+            lineStats[lineStats.length - 1].TimeDifftoPositionAhead ||
+            "-"
         }}
         } @else { - }
       </span>
@@ -127,7 +159,7 @@
     <span title="Gap to leader">
       Ldr @if (lineStats.length) {
       {{
-      line.GapToLeader || lineStats[lineStats.length - 1].TimeDiffToFastest
+        line.GapToLeader || lineStats[lineStats.length - 1].TimeDiffToFastest
       }}
       } @else { - }
     </span>
@@ -141,7 +173,9 @@
         {{ currentStint.Compound[0] || "—" }}
       </span>
     </span>
-    <span [title]="'Tyre age' + currentStint.New === 'false' ? ' (not fresh)' : ''">
+    <span
+      [title]="'Tyre age' + currentStint.New === 'false' ? ' (not fresh)' : ''"
+    >
       Age {{ currentStint.TotalLaps }}
       @if (currentStint.New === "false") { * }
     </span>
@@ -149,9 +183,9 @@
 
   <!-- INFO -->
   <span>
-    <span title="Completed laps">Lap {{line.NumberOfLaps || "—"}}</span>
+    <span title="Completed laps">Lap {{ line.NumberOfLaps || "—" }}</span>
     <br />
-    <span title="Pit stops">Stp {{line.NumberOfPitStops || "—"}}</span>
+    <span title="Pit stops">Stp {{ line.NumberOfPitStops || "—" }}</span>
   </span>
 
   <!-- SECTORS -->
@@ -161,14 +195,25 @@
       <div class="flex flex-col">
         <div class="flex items-center">
           @for (segment of parseSectorSegment(sector); track $index) {
-          <span class="w-0.5 h-3 mr-1 block" [ngClass]="parseSegmentColour(segment.Status)">
+          <span
+            class="w-0.5 h-3 mr-1 block"
+            [ngClass]="parseSegmentColour(segment.Status)"
+          >
           </span>
           }
         </div>
         @if (sector.Value) {
-        <span class="mt-2 inline-block"
-          [ngClass]="sector.OverallFastest ? 'text-accent' : sector.PersonalFastest ? 'text-success' : 'text-warning'">
-          {{sector.Value}}
+        <span
+          class="mt-2 inline-block"
+          [ngClass]="
+            sector.OverallFastest
+              ? 'text-accent'
+              : sector.PersonalFastest
+              ? 'text-success'
+              : 'text-warning'
+          "
+        >
+          {{ sector.Value }}
         </span>
         }
       </div>

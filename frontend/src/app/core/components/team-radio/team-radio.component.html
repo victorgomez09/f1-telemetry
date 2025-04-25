@@ -9,20 +9,13 @@
           <span class="col-span-2">{{ formatDate(radio.Utc) }}</span>
 
           <span
+            class="col-span-2"
             [ngStyle]="{ color: '#' + drivers[radio.RacingNumber].TeamColour }"
           >
             {{ radio.RacingNumber }} {{ drivers[radio.RacingNumber].Tla }}
           </span>
 
-          <!-- onClick={() => setPlaying((p) => !p)} -->
-          <!-- <button>
-            {{ secondsToMinutes(progress$()) }} /
-            {{ secondsToMinutes(duration$()) }}
-          </button> -->
-          <button class="btn btn-sm btn-ghost" (click)="playAudio(radio.Path)">
-            <lucide-icon name="play" class="size-4"></lucide-icon>
-          </button>
-          <progress class="progress" value="40" max="100"></progress>
+          <app-audio-player [path]="radio.Path" class="col-span-6" />
         </div>
       </li>
       }

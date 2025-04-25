@@ -1,0 +1,20 @@
+<div class="flex items-center gap-1">
+  @if (!playing$()) {
+  <button class="btn btn-sm btn-ghost p-0" (click)="play()">
+    <lucide-icon name="play" class="size-4"></lucide-icon>
+  </button>
+  } @else {
+  <button class="btn btn-sm btn-ghost p-0" (click)="pause()">
+    <lucide-icon name="pause" class="size-4"></lucide-icon>
+  </button>
+  <button class="btn btn-sm btn-ghost p-0" (click)="reset()">
+    <lucide-icon name="square" class="size-4"></lucide-icon>
+  </button>
+  }
+
+  <progress
+    class="progress w-56"
+    [value]="progress$()"
+    [max]="duration$()"
+  ></progress>
+</div>

@@ -6,13 +6,13 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { Driver } from '../../models/driver.model';
 import { Sector, SectorSegment, TimingLine } from '../../models/timing-data.model';
 import { WebSocketService } from '../../../services/web-socket/web-socket.service';
+import { DriverTagComponent } from "./driver-tag/driver-tag.component";
 
 @Component({
   selector: 'app-driver',
-  imports: [CommonModule],
+  imports: [CommonModule, DriverTagComponent],
   templateUrl: './driver.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
