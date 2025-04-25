@@ -1,0 +1,84 @@
+<!-- <div class="flex h-[55px] w-[55px] items-center justify-center rounded-full">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="50"
+    height="50"
+    [attr.view-box]="'0 0 50 50'"
+    fill="none"
+    class="absolute"
+  >
+    <path
+      class="stroke-info stroke-5"
+      [attr.d]="
+        describeArc(
+          size / 2,
+          size / 2,
+          size / 2 - strokeWidth / 2,
+          startAngle,
+          endAngle
+        )
+      "
+      [attr.stroke-linecap]="'round'"
+    />
+
+    <circle
+      class="text-indigo-500 progress-ring__circle stroke-current"
+      stroke-width="10"
+      stroke-linecap="round"
+      cx="50"
+      cy="50"
+      r="40"
+      fill="transparent"
+      stroke-dasharray="251.2"
+      stroke-dashoffset="calc(251.2 - (251.2 * 70) / 100)"
+    ></circle>
+  </svg>
+
+  <div class="mt-2 flex flex-col items-center gap-0.5">
+    <p
+      class="flex h-[22px] shrink-0 text-xl font-medium not-italic leading-[normal] text-[color:var(--Base-Text,#F2F2F2)]"
+    >
+      4
+    </p>
+  </div>
+</div> -->
+
+<div class="relative size-12">
+  <svg
+    class="rotate-[135deg] size-full"
+    viewBox="0 0 36 36"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <!-- Background Circle (Gauge) -->
+    <circle
+      cx="18"
+      cy="18"
+      r="16"
+      fill="none"
+      class="stroke-current text-base-content/30"
+      stroke-width="2"
+      stroke-dasharray="75 100"
+    ></circle>
+
+    <!-- Gauge Progress -->
+    <circle
+      cx="18"
+      cy="18"
+      r="16"
+      fill="none"
+      class="stroke-current text-info"
+      stroke-width="2"
+      [attr.stroke-dasharray]="(75 / 100) * value + ' 100'"
+    ></circle>
+  </svg>
+
+  <!-- Value Text -->
+  <div
+    class="absolute top-2/3 start-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center !p-1"
+  >
+    <div class="flex flex-col items-center !p-1">
+      <span class="font-semibold text-lg">{{ gear }}</span>
+      <span class="text-sm">{{ rpms }}</span>
+    </div>
+  </div>
+</div>

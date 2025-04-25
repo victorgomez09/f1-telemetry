@@ -6,13 +6,19 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { Sector, SectorSegment, TimingLine } from '../../models/timing-data.model';
+import {
+  Sector,
+  SectorSegment,
+  TimingLine,
+} from '../../models/timing-data.model';
 import { WebSocketService } from '../../../services/web-socket/web-socket.service';
-import { DriverTagComponent } from "./driver-tag/driver-tag.component";
+import { DriverTagComponent } from './driver-tag/driver-tag.component';
+import { DriverDrsComponent } from './driver-drs/driver-drs.component';
+import { DriverRpmComponent } from "./driver-rpm/driver-rpm.component";
 
 @Component({
   selector: 'app-driver',
-  imports: [CommonModule, DriverTagComponent],
+  imports: [CommonModule, DriverTagComponent, DriverDrsComponent, DriverRpmComponent],
   templateUrl: './driver.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -51,25 +57,33 @@ export class DriverComponent {
   }
 
   parseSectorSegment(sector: Sector): SectorSegment[] {
-    return (Array.isArray(sector.Segments)
+    return Array.isArray(sector.Segments)
       ? sector.Segments
-      : Object.values(sector.Segments ?? {}))
+      : Object.values(sector.Segments ?? {});
   }
 
   parseSegmentColour(status: number) {
     switch (status) {
       case 2048:
-        return "bg-warning";
+        return 'bg-warning';
       case 2049:
-        return "bg-success";
+        return 'bg-success';
       case 2051:
-        return "bg-accent";
+        return 'bg-accent';
       case 2064:
-        return "bg-info";
+        return 'bg-info';
       default:
-        return "bg-base-content/50";
+        return 'bg-base-content/50';
     }
-  };
+  }
+
+  hasDRS(drs: number) {
+    return drs > 9;
+  }
+
+  possibleDRS(drs: number) {
+    return drs === 8;
+  }
 
   get driver() {
     return this.websocketService.liveState$().DriverList[this.racingNumber];
@@ -85,6 +99,10 @@ export class DriverComponent {
     return this.websocketService.liveState$().TimingAppData.Lines[
       this.racingNumber
     ];
+  }
+
+  get timmingData() {
+    return this.websocketService.liveState$().TimingData.Lines[this.racingNumber]
   }
 
   get checkGridPos() {
@@ -116,8 +134,8 @@ export class DriverComponent {
   }
 
   get sectors(): Sector[] {
-    return (Array.isArray(this.line.Sectors)
+    return Array.isArray(this.line.Sectors)
       ? this.line.Sectors
-      : Object.values(this.line.Sectors ?? {}))
+      : Object.values(this.line.Sectors ?? {});
   }
 }
