@@ -1,5 +1,5 @@
 <div
-  class="grid grid-cols-[5em_6.5em_8em_7em_5em_5em_auto] md:grid-cols-[5em_6.5em_14em_7em_5em_5em_auto] items-center border-b border-base-100 p-1"
+  class="grid grid-cols-[5em_6.5em_14em_7em_5em_5em_auto] md:grid-cols-[5em_6.5em_14em_7em_5em_5em_auto] items-center border-b p-0.5 border-base-100"
   [ngClass]="{
     'opacity-65': line.Retired || line.Stopped
   }"
@@ -131,7 +131,7 @@
         </div>
         @if (sector.Value) {
         <span
-          class="mt-2 inline-block"
+          class="mt-1 inline-block"
           [ngClass]="
             sector.OverallFastest
               ? 'text-accent'
