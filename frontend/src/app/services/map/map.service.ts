@@ -2,6 +2,7 @@ import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Map } from '../../core/models/map.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -9,9 +10,7 @@ import { Map } from '../../core/models/map.model';
 export class MapService {
   private httClient = inject(HttpClient);
 
-  map$: WritableSignal<Map> = signal({} as Map);
-
-  fetchMap(circuitKey: number): void {
+  fetchMap(circuitKey: number): Observable<any> {
     const year = new Date().getFullYear();
 
     // const mapRequest = await fetch(
@@ -19,10 +18,8 @@ export class MapService {
     // );
     // return mapRequest.json();
 
-    this.httClient
-      .get<Map>(
-        `https://api.multiviewer.app/api/v1/circuits/${circuitKey}/${year}`
-      )
-      .subscribe((data) => this.map$.set(data));
+    return this.httClient.get<any>(
+      `https://api.multiviewer.app/api/v1/circuits/${circuitKey}/${year}`
+    );
   }
 }

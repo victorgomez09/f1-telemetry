@@ -1,25 +1,17 @@
-import { Driver } from './driver.model';
-
-export type DriverPositionBatch = {
-  utc: string;
-  positions: DriverPosition[];
+export type Position = {
+  Position: PositionData;
 };
 
-export type DriverPosition = {
-  driverNr: string;
-  position: string;
+export type PositionData = {
+  Timestamp?: string;
+  Entries?: {
+    [key: string]: PositionEntry;
+  };
+};
 
-  broadcastName: string;
-  fullName: string;
-  firstName: string;
-  lastName: string;
-  short: string;
-
-  teamColor: string;
-
-  // status: Driver['status'];
-
-  x: number;
-  y: number;
-  z: number;
+export type PositionEntry = {
+  Status?: string;
+  X?: number;
+  Y?: number;
+  Z?: number;
 };

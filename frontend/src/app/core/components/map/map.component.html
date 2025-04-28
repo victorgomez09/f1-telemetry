@@ -1,93 +1,135 @@
 <div class="card bg-base-300 w-full shadow-sm h-full">
   <div class="card-body p-2">
+    @defer (when !loading$()) {
     <svg
-			[attr.view-box]="`${bounds$()[0]} ${bounds$()[1]} ${bounds$()[2]} ${bounds$()[3]}`"
-			class="h-full w-full xl:max-h-screen"
-			xmlns="http://www.w3.org/2000/svg"
-		>
-			<path
-				class="stroke-gray-800"
-				[attr.stroke-width]="300"
-				[attr.stroke-linejoin]="'round'"
-				fill="transparent"
-				[attr.d]="`M${points$()![0].x},${points$()![0].y} ${parsedPoints}`"
-			/>
+      xmlns="http://www.w3.org/2000/svg"
+      [attr.viewBox]="`${bounds$()[0]} ${bounds$()[1]} ${bounds$()[2]} ${bounds$()[3]}`"
+      width="100%"
+      height="100%"
+    >
+      <path
+        class="stroke-base-300/40"
+        stroke-width="150"
+        stroke-linecap="round"
+        fill="transparent"
+        [attr.d]="`M${data$().transformedPoints[0][0]},${data$().transformedPoints[0][1]} ${transformedPoints}`"
+      />
+      <path
+        stroke="white"
+        stroke-width="60"
+        stroke-linecap="round"
+        fill="transparent"
+        [attr.d]="`M${data$().transformedPoints[0][0]},${data$().transformedPoints[0][1]} ${transformedPoints}`"
+      />
+      <rect
+        [attr.x]="data$().transformedPoints[0][0]"
+        [attr.y]="data$().transformedPoints[0][1]"
+        [attr.width]="stroke$() * 4"
+        [attr.height]="stroke$()"
+        fill="red"
+        class="fill-primary stroke-base-300"
+        [attr.stroke-width]="stroke$() / 2"
+        [attr.transform]="`translate(${stroke$() * -2} ${(stroke$() * -1) / 2}) rotate(${
+          data$().startAngle + 90
+        }, ${data$().transformedPoints[0][0] + stroke$() * 2}, ${
+          data$().transformedPoints[0][1] + stroke$() / 2
+        })`"
+      />
+      <!-- {Object.entries(Position.Entries ?? {})
+          .sort(sortDriverPosition(TimingData.Lines))
+          .map(([racingNumber, pos]) => {
+            const driver = DriverList[racingNumber];
+            const timingData = TimingData.Lines[racingNumber];
+            const onTrack =
+              pos.Status === "OnTrack" &&
+              (timingData ? !timingData.InPit : true);
+            const out =
+              timingData?.KnockedOut ||
+              timingData?.Retired ||
+              timingData?.Stopped;
+            const [rx, ry] = rotate(
+              pos.X,
+              pos.Y,
+              data.rotation,
+              (Math.max(...data.x) - Math.min(...data.x)) / 2,
+              (Math.max(...data.y) - Math.min(...data.y)) / 2
+            );
+            const fontSize = stroke * 3;
+            return driver && !out ? (
+              <g key={`pos-${racingNumber}`} opacity={onTrack ? 1 : 0.5}>
+                <circle
+                  cx={rx}
+                  cy={ry}
+                  r={stroke * (onTrack ? 1.25 : 0.75)}
+                  fill={
+                    driver?.TeamColour
+                      ? `#${driver.TeamColour}`
+                      : "var(--colour-fg)"
+                  }
+                  stroke="var(--colour-bg)"
+                  strokeWidth={fontSize / 10}
+                  style={{ transition: "1s linear" }}
+                />
+                <text
+                  x={0}
+                  y={0}
+                  fill={
+                    driver?.TeamColour
+                      ? `#${driver.TeamColour}`
+                      : "var(--colour-fg)"
+                  }
+                  fontSize={fontSize}
+                  fontWeight="bold"
+                  stroke="var(--colour-bg)"
+                  strokeWidth={fontSize / 20}
+                  style={{
+                    transform: `translate(${rx + stroke * 1.5}px, ${
+                      ry + stroke
+                    }px)`,
+                    transition: "1s linear",
+                  }}
+                >
+                  {driver.Tla}
+                </text>
+              </g>
+            ) : null;
+          })}
+        {data.corners.map((corner) => {
+          let string = `${corner.number}`;
+          if (corner.letter) string = string + corner.letter;
 
-			{renderedSectors.map((sector) => {
-				const style = sector.pulse
-					? {
-							animation: `${sector.pulse * 100}ms linear infinite pulse`,
-						}
-					: {};
-				return (
-					<path
-						key={`map.sector.${sector.number}`}
-						class={sector.color}
-						strokeWidth={sector.strokeWidth}
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						fill="transparent"
-						d={sector.d}
-						style={style}
-					/>
-				);
-			})}
+          const fontSize = stroke * 2;
 
-			{showCornerNumbers &&
-				corners.map((corner) => (
-					<CornerNumber
-						key={`corner.${corner.number}`}
-						number={corner.number}
-						x={corner.labelPos.x}
-						y={corner.labelPos.y}
-					/>
-				))}
+          const [cornerX, cornerY] = corner.transformedCorner;
+          const [labelX, labelY] = corner.transformedLabel;
 
-			{centerX && centerY && positions && drivers && (
-				<>
-				{positions["241"] && (
-					<CarDot
-						key={`map.car.241`}
-						favoriteDriver={false}
-						name="Safety Car"
-						pit={false}
-						hidden={false}
-						pos={positions["241"]}
-						color={undefined}
-						rotation={rotation}
-						centerX={centerX}
-						centerY={centerY}
-					/>
-				)}
+          const lineX = labelX + fontSize * (string.length * 0.25);
+          const lineY = labelY - (labelY > cornerY ? fontSize * 0.7 : 0);
 
-					{objectEntries(drivers)
-						.reverse()
-						.filter((driver) => !!positions[driver.racingNumber].X && !!positions[driver.racingNumber].Y)
-						.map((driver) => {
-							const timingDriver = timingDrivers?.lines[driver.racingNumber];
-							const hidden = timingDriver
-								? timingDriver.knockedOut || timingDriver.stopped || timingDriver.retired
-								: false;
-							const pit = timingDriver ? timingDriver.inPit : false;
-
-							return (
-								<CarDot
-									key={`map.driver.${driver.racingNumber}`}
-									favoriteDriver={favoriteDrivers.length > 0 ? favoriteDrivers.includes(driver.racingNumber) : false}
-									name={driver.tla}
-									color={driver.teamColour}
-									pit={pit}
-									hidden={hidden}
-									pos={positions[driver.racingNumber]}
-									rotation={rotation}
-									centerX={centerX}
-									centerY={centerY}
-								/>
-							);
-						})}
-				</>
-			)}
-		</svg>
-	);
+          return (
+            <g key={`corner-${corner.number}}`}>
+              <text
+                x={labelX}
+                y={labelY}
+                fontSize={fontSize}
+                fontWeight="bold"
+                fill="red"
+                stroke="var(--colour-bg)"
+                strokeWidth={fontSize / 40}
+              >
+                {string}
+              </text>
+              <path
+                stroke="red"
+                strokeWidth={stroke / 2}
+                opacity={0.25}
+                d={`M${cornerX},${cornerY} L${lineX},${lineY}`}
+              />
+            </g>
+          );
+        })} -->
+    </svg>
+    <!-- } -->
+    }
   </div>
 </div>

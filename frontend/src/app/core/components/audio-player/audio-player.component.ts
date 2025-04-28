@@ -36,17 +36,10 @@ export class AudioPlayerComponent implements OnInit {
     );
 
     this.audio.onloadedmetadata = (ev: Event) => {
-      console.log('ev', ev);
-      console.log('duration', this.audio.duration);
       this.duration$.set(this.audio.duration);
     };
 
     this.audio.addEventListener('timeupdate', () => {
-      console.log('duration', this.duration$());
-      console.log(
-        'progress',
-        (this.audio.currentTime / this.audio.duration) * 100
-      );
       this.progress$.set((this.audio.currentTime / this.audio.duration) * 100);
     });
 

@@ -53,7 +53,7 @@ export class DashboardComponent implements OnInit {
   dateNow = Date.now();
 
   constructor() {
-    this.websocketService.initWebSocket();
+    // this.websocketService.initWebSocket();
   }
 
   ngOnInit(): void {

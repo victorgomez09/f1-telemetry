@@ -14,10 +14,12 @@ import {
 } from 'lucide-angular';
 
 import { routes } from './app.routes';
+import { provideHttpClient } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimations(),
+    provideHttpClient(),
     provideExperimentalZonelessChangeDetection(),
     provideRouter(routes),
     importProvidersFrom(

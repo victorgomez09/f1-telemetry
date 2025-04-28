@@ -36,17 +36,26 @@ export type SessionArchive = {
 };
 
 export type SessionData = {
-  Series: SessionDataSerie[]
-  StatusSeries: SessionStatusSeries[]
-}
+  Series: SessionDataSerie[];
+  StatusSeries: SessionStatusSeries[];
+};
 
 export type SessionDataSerie = {
   Utc: string;
   Lap: number;
-}
+};
 
 export type SessionStatusSeries = {
   Utc: string;
   TrackStatus?: string;
   SessionStatus?: string;
-}
+};
+
+export type SessionStatusMessage = {
+  message: string;
+  color: string;
+  trackColor: string;
+  bySector?: boolean;
+  pulse?: number;
+  hex: string;
+};

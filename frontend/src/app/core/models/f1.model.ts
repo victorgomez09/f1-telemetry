@@ -3,6 +3,7 @@ import { F1ExtrapolatedClock } from './clock.model';
 import { Driver } from './driver.model';
 import { Heartbeat } from './hearthbeat.model';
 import { Laps } from './laps.model';
+import { Position } from './position.model';
 import { RaceControlMessage } from './race-control.model';
 import { TeamRadio } from './radio.model';
 import { SessionData, SessionInfo } from './session.model';
@@ -27,5 +28,5 @@ export type LiveTimming = {
   CarData: CarData;
   SessionData: SessionData;
   TeamRadio: TeamRadio;
-  // positionBatches: DriverPositionBatch[];
+  Position: Position;
 };
