@@ -2,10 +2,11 @@
   <div class="card-body !gap-4 p-0">
     <div class="flex">
       <!-- style="grid-template-columns: 1fr" -->
+      @if (!isMobile$()) { @defer {
       <div class="grid grid-cols-[50%_50%] w-full">
         <div>
           <div
-            class="grid grid-cols-[4em_10em_10em_12em_12em_4em_auto] md:grid-cols-[5em_6.5em_14em_7em_5em_5em_auto] border-b border-base-100 p-2 text-center"
+            class="grid grid-cols-[5em_6.5em_7em_5em_5em_auto] md:grid-cols-[5em_6.5em_14em_7em_5em_5em_auto] border-b border-base-100 p-2 text-center"
           >
             <p class="font-semibold">DRIVER</p>
             <p class="font-semibold">DRS</p>
@@ -42,6 +43,26 @@
           }
         </div>
       </div>
+      } } @else {
+      <div class="grid grid-cols-1 w-full">
+        <div>
+          <div
+            class="grid grid-cols-[4em_4em_5em_5em_6em_auto] md:grid-cols-[6em_6em_8em_8em_8em_auto] border-b border-base-100 p-2 text-center"
+          >
+            <p class="font-semibold">DRIVER</p>
+            <p class="font-semibold">DRS</p>
+            <p class="font-semibold">TIME</p>
+            <p class="font-semibold">GAP</p>
+            <p class="font-semibold">TYRE</p>
+            <p class="font-semibold">SECTORS</p>
+          </div>
+
+          @for (line of timmingData; track $index) {
+          <app-driver [racingNumber]="line[0]" [line]="line[1]" />
+          }
+        </div>
+      </div>
+      }
     </div>
   </div>
 </div>

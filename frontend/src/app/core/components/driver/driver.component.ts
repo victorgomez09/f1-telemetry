@@ -2,7 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
+  Injector,
   Input,
+  OnInit,
+  Signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -16,6 +19,9 @@ import { DriverTagComponent } from './driver-tag/driver-tag.component';
 import { DriverDrsComponent } from './driver-drs/driver-drs.component';
 import { DriverRpmComponent } from './driver-rpm/driver-rpm.component';
 import { DriverTireComponent } from './driver-tire/driver-tire.component';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-driver',
@@ -29,15 +35,27 @@ import { DriverTireComponent } from './driver-tire/driver-tire.component';
   templateUrl: './driver.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DriverComponent {
+export class DriverComponent implements OnInit {
+  private breakpointObserver$ = inject(BreakpointObserver);
+  private injector = inject(Injector);
   private websocketService = inject(WebSocketService);
 
   drsEnabledValues: number[] = [10, 12, 14];
+  isMobile$!: Signal<boolean>;
 
   @Input()
   racingNumber!: string;
   @Input()
   line!: TimingLine;
+
+  ngOnInit(): void {
+    this.isMobile$ = toSignal(
+      this.breakpointObserver$
+        .observe(Breakpoints.Handset)
+        .pipe(map((result) => result.matches)),
+      { initialValue: true, injector: this.injector }
+    );
+  }
 
   parseTyreColour(compound: string) {
     switch (compound?.toLowerCase()) {

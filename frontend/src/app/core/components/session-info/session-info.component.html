@@ -4,11 +4,13 @@
       <div class="flex items-center gap-4">
         <!-- Session name -->
         <div class="flex items-baseline gap-2">
-          <dt class="text-xl font-semibold">
+          <dt class="text-xl sm:text-lg font-semibold">
             {{ sessionInfo.Meeting.OfficialName }}
           </dt>
 
-          <dd class="truncate text-sm font-medium text-base-content/60">
+          <dd
+            class="flex sm:hidden truncate text-sm font-medium text-base-content/60"
+          >
             {{ sessionInfo.Meeting.Circuit.ShortName }},{{ " " }}
             {{ sessionInfo.Meeting.Country.Name }}
           </dd>
@@ -56,7 +58,7 @@
       </div>
 
       <!-- Connection data -->
-      <div class="flex items-center gap-3">
+      <div class="flex sm:hidden items-center gap-3">
         <p>Data updated: {{ updatedDate }} UTC</p>
         <p class="text-success">CONNECTED</p>
 

@@ -1,7 +1,8 @@
 <div
-  class="grid grid-cols-[5em_6.5em_8em_7em_5em_5em_auto] md:grid-cols-[5em_6.5em_14em_7em_5em_5em_auto] items-center border-b border-base-100 p-1"
+  class="grid grid-cols-[4em_4em_5em_5em_6em_auto] md:grid-cols-[6em_6em_8em_8em_8em_auto] items-center border-b border-base-100 p-1"
   [ngClass]="{
-    'opacity-65': line.Retired || line.Stopped
+    'opacity-65': line.Retired || line.Stopped,
+    'md:grid-cols-[5em_6.5em_14em_7em_5em_5em_auto]': !isMobile$()
   }"
 >
   <!-- DRIVER -->
@@ -26,6 +27,7 @@
   />
 
   <!-- RPM -->
+  @if (!isMobile$()) { @defer {
   <app-driver-rpm
     [value]="(carData['0'] / 15000) * 100"
     [gear]="carData['3']"
@@ -34,9 +36,10 @@
     [throttlePercent]="throttlePercent"
     [brakePercent]="brakePercent"
   />
+  } }
 
   <!-- TIME -->
-  <div class="flex flex-col">
+  <div class="flex flex-col items-center">
     <div title="Last lap">
       <span class="font-semibold">Lst</span>
       <span
@@ -69,7 +72,7 @@
   </div>
 
   <!-- GAP -->
-  <div class="flex flex-col">
+  <div class="flex flex-col items-center">
     <div
       [title]="
         'Gap to car ahead' + line.IntervalToPositionAhead.Catching
@@ -116,7 +119,7 @@
   </span> -->
 
   <!-- SECTORS -->
-  <span class="flex items-center gap-2">
+  <span class="flex items-center justify-center gap-2">
     @for (sector of sectors; track $index) {
     <span [title]="'Sector' + $index + 1">
       <div class="flex flex-col">
