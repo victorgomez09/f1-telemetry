@@ -9,4 +9,5 @@ export type Message = {
   Flag?: string;
   Scope?: string;
   Message?: string;
+  Sector?: number;
 };

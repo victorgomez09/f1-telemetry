@@ -1,3 +1,93 @@
 <div class="card bg-base-300 w-full shadow-sm h-full">
-  <div class="card-body p-2"></div>
+  <div class="card-body p-2">
+    <svg
+			[attr.view-box]="`${bounds$()[0]} ${bounds$()[1]} ${bounds$()[2]} ${bounds$()[3]}`"
+			class="h-full w-full xl:max-h-screen"
+			xmlns="http://www.w3.org/2000/svg"
+		>
+			<path
+				class="stroke-gray-800"
+				[attr.stroke-width]="300"
+				[attr.stroke-linejoin]="'round'"
+				fill="transparent"
+				[attr.d]="`M${points$()![0].x},${points$()![0].y} ${parsedPoints}`"
+			/>
+
+			{renderedSectors.map((sector) => {
+				const style = sector.pulse
+					? {
+							animation: `${sector.pulse * 100}ms linear infinite pulse`,
+						}
+					: {};
+				return (
+					<path
+						key={`map.sector.${sector.number}`}
+						class={sector.color}
+						strokeWidth={sector.strokeWidth}
+						strokeLinecap="round"
+						strokeLinejoin="round"
+						fill="transparent"
+						d={sector.d}
+						style={style}
+					/>
+				);
+			})}
+
+			{showCornerNumbers &&
+				corners.map((corner) => (
+					<CornerNumber
+						key={`corner.${corner.number}`}
+						number={corner.number}
+						x={corner.labelPos.x}
+						y={corner.labelPos.y}
+					/>
+				))}
+
+			{centerX && centerY && positions && drivers && (
+				<>
+				{positions["241"] && (
+					<CarDot
+						key={`map.car.241`}
+						favoriteDriver={false}
+						name="Safety Car"
+						pit={false}
+						hidden={false}
+						pos={positions["241"]}
+						color={undefined}
+						rotation={rotation}
+						centerX={centerX}
+						centerY={centerY}
+					/>
+				)}
+
+					{objectEntries(drivers)
+						.reverse()
+						.filter((driver) => !!positions[driver.racingNumber].X && !!positions[driver.racingNumber].Y)
+						.map((driver) => {
+							const timingDriver = timingDrivers?.lines[driver.racingNumber];
+							const hidden = timingDriver
+								? timingDriver.knockedOut || timingDriver.stopped || timingDriver.retired
+								: false;
+							const pit = timingDriver ? timingDriver.inPit : false;
+
+							return (
+								<CarDot
+									key={`map.driver.${driver.racingNumber}`}
+									favoriteDriver={favoriteDrivers.length > 0 ? favoriteDrivers.includes(driver.racingNumber) : false}
+									name={driver.tla}
+									color={driver.teamColour}
+									pit={pit}
+									hidden={hidden}
+									pos={positions[driver.racingNumber]}
+									rotation={rotation}
+									centerX={centerX}
+									centerY={centerY}
+								/>
+							);
+						})}
+				</>
+			)}
+		</svg>
+	);
+  </div>
 </div>
