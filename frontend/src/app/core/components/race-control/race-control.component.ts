@@ -43,7 +43,7 @@ export class RaceControlComponent implements OnInit {
       case 'blue':
         return 'badge-info';
       default:
-        return 'badge-base-content/30';
+        return 'badge-base-content/60';
     }
   }
 

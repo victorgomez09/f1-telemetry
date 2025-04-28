@@ -5,7 +5,7 @@
 
       @for (event of events; track $index) {
       <li class="list-row p-2">
-        <div class="flex items-center gap-2">
+        <div class="grid items-center gap-2">
           <span class="flex items-center gap-2">
             {{ formatDate(event.Utc) }}
             @if (event.Lap) { / Lap {{ event.Lap }}
