@@ -1,17 +1,17 @@
 export type Position = {
-  Position: PositionData;
+  Position: PositionData[];
 };
 
 export type PositionData = {
-  Timestamp?: string;
-  Entries?: {
+  Timestamp: string;
+  Entries: {
     [key: string]: PositionEntry;
   };
 };
 
 export type PositionEntry = {
-  Status?: string;
-  X?: number;
-  Y?: number;
-  Z?: number;
+  Status: string;
+  X: number;
+  Y: number;
+  Z: number;
 };

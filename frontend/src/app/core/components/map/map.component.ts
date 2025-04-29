@@ -6,24 +6,15 @@ import {
   signal,
   WritableSignal,
 } from '@angular/core';
-import { utc } from 'moment';
 
+import { CommonModule } from '@angular/common';
 import { MapService } from '../../../services/map/map.service';
 import { WebSocketService } from '../../../services/web-socket/web-socket.service';
-import {
-  Corner,
-  Map,
-  MapSector,
-  RenderedSector,
-  TrackPosition,
-  MapCorner,
-} from '../../models/map.model';
-import { Message } from '../../models/race-control.model';
-import { SessionStatusMessage } from '../../models/session.model';
+import { CarDotComponent } from './car-dot/car-dot.component';
 
 @Component({
   selector: 'app-map',
-  imports: [],
+  imports: [CommonModule, CarDotComponent],
   templateUrl: './map.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -34,11 +25,8 @@ export class MapComponent implements OnInit {
   private ROTATION_FIX = 90;
 
   bounds$: WritableSignal<(null | number)[]> = signal([null, null, null, null]);
-  centers$: WritableSignal<(null | number)[]> = signal([null, null]);
-  points$: WritableSignal<null | { x: number; y: number }[]> = signal(null);
-  sectors$: WritableSignal<MapSector[]> = signal([]);
-  corners$: WritableSignal<MapCorner[]> = signal([]);
-  rotation$: WritableSignal<number> = signal(0);
+  data$: WritableSignal<any> = signal({});
+  stroke$: WritableSignal<number> = signal(0);
   loading$: WritableSignal<boolean> = signal(true);
 
   async ngOnInit(): Promise<void> {
@@ -51,207 +39,87 @@ export class MapComponent implements OnInit {
         console.log('map', map);
 
         if (Object.entries(map).length > 0) {
-          const centerX = (Math.max(...map.x) - Math.min(...map.x)) / 2;
-          const centerY = (Math.max(...map.y) - Math.min(...map.y)) / 2;
+          const px = (Math.max(...map.x) - Math.min(...map.x)) / 2;
+          const py = (Math.max(...map.y) - Math.min(...map.y)) / 2;
 
-          const fixedRotation = map.rotation + this.ROTATION_FIX;
-
-          const sectors = this.createSectors(map).map((s) => ({
-            ...s,
-            start: this.rotate(
-              s.start.x,
-              s.start.y,
-              fixedRotation,
-              centerX,
-              centerY
-            ),
-            end: this.rotate(s.end.x, s.end.y, fixedRotation, centerX, centerY),
-            points: s.points.map((p) =>
-              this.rotate(p.x, p.y, fixedRotation, centerX, centerY)
-            ),
-          }));
-
-          const cornerPositions: MapCorner[] = map.corners.map((corner) => ({
-            number: corner.number,
-            pos: this.rotate(
-              corner.trackPosition.x,
-              corner.trackPosition.y,
-              fixedRotation,
-              centerX,
-              centerY
-            ),
-            labelPos: this.rotate(
-              corner.trackPosition.x + 540 * Math.cos(this.rad(corner.angle)),
-              corner.trackPosition.y + 540 * Math.sin(this.rad(corner.angle)),
-              fixedRotation,
-              centerX,
-              centerY
-            ),
-          }));
-
-          const rotatedPoints = map.x.map((x, index) =>
-            this.rotate(x, map.y[index], fixedRotation, centerX, centerY)
+          map.transformedPoints = map.x.map((x: number, i: number) =>
+            this.rotate(x, map.y[i], map.rotation, px, py)
           );
 
-          const pointsX = rotatedPoints.map((item) => item.x);
-          const pointsY = rotatedPoints.map((item) => item.y);
+          const cMinX =
+            Math.min(...map.transformedPoints.map(([x]: number[]) => x)) -
+            this.SPACE;
+          const cMinY =
+            Math.min(...map.transformedPoints.map(([, y]: number[]) => y)) -
+            this.SPACE;
+          const cWidthX =
+            Math.max(...map.transformedPoints.map(([x]: number[]) => x)) -
+            cMinX +
+            this.SPACE * 2;
+          const cWidthY =
+            Math.max(...map.transformedPoints.map(([, y]: number[]) => y)) -
+            cMinY +
+            this.SPACE * 2;
 
-          const cMinX = Math.min(...pointsX) - this.SPACE;
-          const cMinY = Math.min(...pointsY) - this.SPACE;
-          const cWidthX = Math.max(...pointsX) - cMinX + this.SPACE * 2;
-          const cWidthY = Math.max(...pointsY) - cMinY + this.SPACE * 2;
-
-          this.centers$.set([centerX, centerY]);
           this.bounds$.set([cMinX, cMinY, cWidthX, cWidthY]);
-          this.sectors$.set(sectors);
-          this.points$.set(rotatedPoints);
-          this.rotation$.set(fixedRotation);
-          this.corners$.set(cornerPositions);
+
+          const cStroke = (cWidthX + cWidthY) / 225;
+          this.stroke$.set(cStroke);
+
+          map.corners = map.corners.map((corner: any) => {
+            const transformedCorner = this.rotate(
+              corner.trackPosition.x,
+              corner.trackPosition.y,
+              map.rotation,
+              px,
+              py
+            );
+
+            const transformedLabel = this.rotate(
+              corner.trackPosition.x +
+                4 * cStroke * Math.cos(this.rad(corner.angle)),
+              corner.trackPosition.y +
+                4 * cStroke * Math.sin(this.rad(corner.angle)),
+              map.rotation,
+              px,
+              py
+            );
+
+            return { ...corner, transformedCorner, transformedLabel };
+          });
+
+          map.startAngle = this.deg(
+            Math.atan(
+              (map.transformedPoints[3][1] - map.transformedPoints[0][1]) /
+                (map.transformedPoints[3][0] - map.transformedPoints[0][0])
+            )
+          );
+
+          this.data$.set(map);
         }
       });
   }
 
-  getSectorColor(
-    sector: MapSector,
-    bySector: boolean | undefined,
-    trackColor: string | undefined = 'stroke-white',
-    yellowSectors: Set<number>
-  ) {
-    return bySector
-      ? yellowSectors.has(sector.number)
-        ? trackColor
-        : 'stroke-white'
-      : trackColor;
-  }
-
-  findYellowSectors(messages: Message[] | undefined): Set<number> {
-    const msgs = messages?.sort(this.sortUtc).filter((msg) => {
-      return (
-        msg.Flag === 'YELLOW' ||
-        msg.Flag === 'DOUBLE YELLOW' ||
-        msg.Flag === 'CLEAR'
-      );
-    });
-
-    if (!msgs) {
-      return new Set();
+  getTrackStatusColour() {
+    switch (this.websocketService.liveState$().TrackStatus.Status) {
+      case '2':
+      case '4':
+      case '6':
+      case '7':
+        return 'stroke-warning/20';
+      case '5':
+        return 'stroke-error/20';
+      default:
+        return 'stroke-base-content/20';
     }
-
-    const done: Set<number> = new Set();
-    const sectors: Set<number> = new Set();
-    for (let i = 0; i < msgs.length; i++) {
-      const msg = msgs[i];
-      if (msg.Scope === 'Track' && msg.Flag !== 'CLEAR') {
-        // Spam with sectors so all sectors are yellow no matter what
-        // number of sectors there really are
-        for (let j = 0; j < 100; j++) {
-          sectors.add(j);
-        }
-        return sectors;
-      }
-      if (msg.Scope === 'Sector') {
-        if (!msg.Sector || done.has(msg.Sector)) {
-          continue;
-        }
-        if (msg.Flag === 'CLEAR') {
-          done.add(msg.Sector);
-        } else {
-          sectors.add(msg.Sector);
-        }
-      }
-    }
-    return sectors;
-  }
-
-  yellowSectors() {
-    return this.findYellowSectors(
-      this.websocketService.liveState$().RaceControlMessages.Messages
-    );
-  }
-
-  renderedSectors() {
-    const status = this.getTrackStatusMessage(
-      this.websocketService.liveState$().TrackStatus.Status
-        ? parseInt(this.websocketService.liveState$().TrackStatus.Status)
-        : undefined
-    );
-
-    return this.sectors$()
-      .map((sector) => {
-        const color = this.getSectorColor(
-          sector,
-          status?.bySector,
-          status?.trackColor,
-          this.yellowSectors()
-        );
-        return {
-          color,
-          pulse: status?.pulse,
-          number: sector.number,
-          strokeWidth: color === 'stroke-white' ? 60 : 120,
-          d: `M${sector.points[0].x},${sector.points[0].y} ${sector.points
-            .map((point) => `L${point.x},${point.y}`)
-            .join(' ')}`,
-        };
-      })
-      .sort(this.prioritizeColoredSectors);
-  }
-
-  getTrackStatusMessage(
-    statusCode: number | undefined
-  ): SessionStatusMessage | null {
-    const messageMap: { [key: string]: SessionStatusMessage } = {
-      1: {
-        message: 'Track Clear',
-        color: 'bg-emerald-500',
-        trackColor: 'stroke-white',
-        hex: '#34b981',
-      },
-      2: {
-        message: 'Yellow Flag',
-        color: 'bg-yellow-500',
-        trackColor: 'stroke-yellow-500',
-        bySector: true,
-        hex: '#f59e0c',
-      },
-      3: {
-        message: 'Flag',
-        color: 'bg-yellow-500',
-        trackColor: 'stroke-yellow-500',
-        bySector: true,
-        hex: '#f59e0c',
-      },
-      4: {
-        message: 'Safety Car',
-        color: 'bg-yellow-500',
-        trackColor: 'stroke-yellow-500',
-        hex: '#f59e0c',
-      },
-      5: {
-        message: 'Red Flag',
-        color: 'bg-red-500',
-        trackColor: 'stroke-red-500',
-        hex: '#ef4444',
-      },
-      6: {
-        message: 'VSC Deployed',
-        color: 'bg-yellow-500',
-        trackColor: 'stroke-yellow-500',
-        hex: '#f59e0c',
-      },
-      7: {
-        message: 'VSC Ending',
-        color: 'bg-yellow-500',
-        trackColor: 'stroke-yellow-500',
-        hex: '#f59e0c',
-      },
-    };
-
-    return statusCode ? messageMap[statusCode] ?? messageMap[0] : null;
   }
 
   private rad(deg: number) {
     return deg * (Math.PI / 180);
+  }
+
+  private deg(rad: number) {
+    return rad / (Math.PI / 180);
   }
 
   private rotate(x: number, y: number, a: number, px: number, py: number) {
@@ -264,95 +132,43 @@ export class MapComponent implements OnInit {
     const newX = x * c - y * s;
     const newY = y * c + x * s;
 
-    return { y: newX + px, x: newY + py };
+    return [newX + px, (newY + py) * -1];
   }
 
-  private calculateDistance(x1: number, y1: number, x2: number, y2: number) {
-    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+  private sortPosition(a: any, b: any) {
+    const [, aLine] = a;
+    const [, bLine] = b;
+    const aPos = Number(aLine.Position);
+    const bPos = Number(bLine.Position);
+
+    return aPos - bPos;
   }
 
-  private findMinDistance(point: TrackPosition, points: TrackPosition[]) {
-    let min = Infinity;
-    let minIndex = -1;
-    for (let i = 0; i < points.length; i++) {
-      const distance = this.calculateDistance(
-        point.x,
-        point.y,
-        points[i].x,
-        points[i].y
-      );
-      if (distance < min) {
-        min = distance;
-        minIndex = i;
-      }
-    }
-
-    return minIndex;
+  get lines() {
+    return this.websocketService.liveState$().TimingData.Lines;
   }
 
-  private createSectors(map: Map): MapSector[] {
-    const sectors: MapSector[] = [];
-    const points: TrackPosition[] = map.x.map((x, index) => ({
-      x,
-      y: map.y[index],
-    }));
-
-    for (let i = 0; i < map.marshalSectors.length; i++) {
-      sectors.push({
-        number: i + 1,
-        start: map.marshalSectors[i].trackPosition,
-        end: map.marshalSectors[i + 1]
-          ? map.marshalSectors[i + 1].trackPosition
-          : map.marshalSectors[0].trackPosition,
-        points: [],
-      });
-    }
-
-    const dividers: number[] = sectors.map((s) =>
-      this.findMinDistance(s.start, points)
-    );
-    for (let i = 0; i < dividers.length; i++) {
-      let start = dividers[i];
-      let end = dividers[i + 1] ? dividers[i + 1] : dividers[0];
-      if (start < end) {
-        sectors[i].points = points.slice(start, end + 1);
-      } else {
-        sectors[i].points = points
-          .slice(start)
-          .concat(points.slice(0, end + 1));
-      }
-    }
-
-    return sectors;
-  }
-
-  private prioritizeColoredSectors(a: RenderedSector, b: RenderedSector) {
-    if (a.color === 'stroke-white' && b.color !== 'stroke-white') {
-      return -1;
-    }
-    if (a.color !== 'stroke-white' && b.color === 'stroke-white') {
-      return 1;
-    }
-    return a.number - b.number;
-  }
-
-  private sortUtc(a: { Utc: string }, b: { Utc: string }) {
-    return utc(b.Utc).diff(utc(a.Utc));
-  }
-
-  get parsedPoints() {
-    return this.points$()
-      ?.map((point) => `L${point.x},${point.y}`)
+  get transformedPoints() {
+    return this.data$()
+      .transformedPoints.map(([x, y]: number[]) => `L${x},${y}`)
       .join(' ');
   }
 
-  // get entries() {
-  //   return Object.entries(this.websocketService.liveState$().DriverList).map(([k, v]) => v)
-  //     .reverse()
-  //     .filter(
-  //       (driver) =>
-  //         !!this.websocketService.liveState$().[driver.racingNumber].X &&
-  //         !!positions[driver.racingNumber].Y
-  //     );
-  // }
+  get transformStyle() {
+    return {
+      transform: `translate(${this.stroke$() * -2} ${
+        (this.stroke$() * -1) / 2
+      }) rotate(${this.data$().startAngle + 90}, ${
+        this.data$().transformedPoints[0][0] + this.stroke$() * 2
+      }, ${this.data$().transformedPoints[0][1] + this.stroke$() / 2})`,
+    };
+  }
+
+  get entries() {
+    return Object.entries(
+      this.websocketService.liveState$().Position.Position[
+        this.websocketService.liveState$().Position.Position.length - 1
+      ].Entries ?? {}
+    ).sort(this.sortPosition);
+  }
 }
