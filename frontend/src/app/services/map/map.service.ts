@@ -10,15 +10,10 @@ import { Observable } from 'rxjs';
 export class MapService {
   private httClient = inject(HttpClient);
 
-  fetchMap(circuitKey: number): Observable<any> {
+  fetchMap(circuitKey: number): Observable<Map> {
     const year = new Date().getFullYear();
 
-    // const mapRequest = await fetch(
-    //   `https://api.multiviewer.app/api/v1/circuits/${circuitKey}/${year}`
-    // );
-    // return mapRequest.json();
-
-    return this.httClient.get<any>(
+    return this.httClient.get<Map>(
       `https://api.multiviewer.app/api/v1/circuits/${circuitKey}/${year}`
     );
   }

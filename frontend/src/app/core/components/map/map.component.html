@@ -1,150 +1,106 @@
 <div class="card bg-base-300 w-full shadow-sm h-full">
   <div class="card-body p-2">
-    @defer (when !loading$()) {
+    @defer (when !loading()) {
     <svg
-      [attr.viewBox]="`${bounds$()![0]} ${bounds$()![1]} ${bounds$()![2]} ${bounds$()![3]}`"
+      [attr.viewBox]="`${bounds()![0]} ${bounds()![1]} ${bounds()![2]} ${bounds()![3]}`"
       class="w-full h-full"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        [class]="getTrackStatusColour()"
-        stroke-width="300"
-        stroke-linecap="round"
-        fill="transparent"
-        [attr.d]="`M${data$().transformedPoints[0][0]},${
-          data$().transformedPoints[0][1]
-        } ${transformedPoints}`"
-      />
-      <path
         class="stroke-base-content"
-        stroke-width="60"
-        stroke-linecap="round"
+        [attr.stroke-width]="300"
+        strokeLinejoin="round"
         fill="transparent"
-        [attr.d]="`M${data$().transformedPoints[0][0]},${
-          data$().transformedPoints[0][1]
-        } ${transformedPoints}`"
+        [attr.d]="`M${points()![0].x},${points()![0].y} ${parsedPoints}`"
       />
-      <rect
-        [attr.x]="data$().transformedPoints[0][0]"
-        [attr.y]="data$().transformedPoints[0][1]"
-        [attr.width]="stroke$() * 4"
-        [attr.height]="stroke$()"
-        [attr.stroke-width]="stroke$() / 2"
-        [attr.transform]="`translate(${stroke$() * -2} ${(stroke$() * -1) / 2}) rotate(${
-          data$().startAngle + 90
-        }, ${data$().transformedPoints[0][0] + stroke$() * 2}, ${
-          data$().transformedPoints[0][1] + stroke$() / 2
-        })`"
-        class="fill-secondary"
+
+      @for (sector of renderedSectors; track $index) {
+      <path
+        [class]="sector.color"
+        [attr.stroke-width]="sector.strokeWidth"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="transparent"
+        [attr.d]="sector.d"
+        [ngStyle]="{ animationDuration: sector.pulse + 's' }"
       />
-      @for (entry of entries; track $index) {
-      <app-car-dot [carData]="entry" [data]="data$()" [stroke]="stroke$()" />
-      } @for (corner of data$().corners; track $index) {
-      <g>
+      } @for (corner of corners(); track $index) {
+      <text
+        [attr.x]="corner.labelPos.x"
+        [attr.y]="corner.labelPos.y"
+        class="fill-base-content"
+        [attr.font-size]="300"
+        fontWeight="semibold"
+      >
+        {{ corner.number }}
+      </text>
+      } @if (positionEntries['241']) {
+      <g
+        class="fill-zinc-700"
+        [ngClass]="{ 'opacity-30': false, hidden: false }"
+        [attr.transition]="'all 1s linear'"
+        [attr.fill]="'#' + undefined"
+        [attr.transform]="
+          transform(
+            positionEntries['241'],
+            rotation(),
+            centers()[0] || 0,
+            centers()[1] || 0
+          )
+        "
+      >
+        <circle [attr.r]="120" />
         <text
-          [attr.x]="corner.transformedLabel[0]"
-          [attr.y]="corner.transformedLabel[1]"
-          class="fill-base-content"
-          [attr.font-size]="300"
-          fontWeight="semibold"
+          fontWeight="bold"
+          [attr.font-size]="120 * 3"
+          [attr.transform]="'translateX(150px) translateY(-120px)'"
         >
-          {{ corner.number }}
+          Safety Car
         </text>
+
+        <!-- {favoriteDriver && ( <circle id={`map.driver.favorite`}
+        className="stroke-sky-400" r={180} fill="transparent" strokeWidth={40}
+        style={{ transition: "all 1s linear" }}
+        /> )} -->
+      </g>
+      } @for (driver of entries; track $index) {
+      <g
+        [ngClass]="{
+          'opacity-30': driverInPit(driver),
+          hidden: driverHidden(driver)
+        }"
+        [attr.transition]="'all 1s linear'"
+        [attr.fill]="'#' + driver.TeamColour"
+        [style]="{
+          transform: transform(
+            positionEntries[driver.RacingNumber],
+            rotation(),
+            centers()[0] || 0,
+            centers()[1] || 0
+          )
+        }"
+      >
+        <circle [attr.r]="120" />
+        <text
+          fontWeight="bold"
+          [attr.font-size]="120 * 3"
+          [style]="{ transform: 'translateX(150px) translateY(-120px)' }"
+        >
+          {{ driver.Tla }}
+        </text>
+
+        <!-- {favoriteDriver && (
+				<circle
+					id={`map.driver.favorite`}
+					className="stroke-sky-400"
+					r={180}
+					fill="transparent"
+					strokeWidth={40}
+					style={{ transition: "all 1s linear" }}
+				/>
+			)} -->
       </g>
       }
-      <!-- {Object.entries(Position.Entries ?? {})
-        .sort(sortDriverPosition(TimingData.Lines))
-        .map(([racingNumber, pos]) => {
-          const driver = DriverList[racingNumber];
-          const timingData = TimingData.Lines[racingNumber];
-          const onTrack =
-            pos.Status === "OnTrack" &&
-            (timingData ? !timingData.InPit : true);
-          const out =
-            timingData?.KnockedOut ||
-            timingData?.Retired ||
-            timingData?.Stopped;
-          const [rx, ry] = rotate(
-            pos.X,
-            pos.Y,
-            data.rotation,
-            (Math.max(...data.x) - Math.min(...data.x)) / 2,
-            (Math.max(...data.y) - Math.min(...data.y)) / 2
-          );
-          const fontSize = stroke * 3;
-          return driver && !out ? (
-            <g key={`pos-${racingNumber}`} opacity={onTrack ? 1 : 0.5}>
-              <circle
-                cx={rx}
-                cy={ry}
-                r={stroke * (onTrack ? 1.25 : 0.75)}
-                fill={
-                  driver?.TeamColour
-                    ? `#${driver.TeamColour}`
-                    : "var(--colour-fg)"
-                }
-                stroke="var(--colour-bg)"
-                strokeWidth={fontSize / 10}
-                style={{ transition: "1s linear" }}
-              />
-              <text
-                x={0}
-                y={0}
-                fill={
-                  driver?.TeamColour
-                    ? `#${driver.TeamColour}`
-                    : "var(--colour-fg)"
-                }
-                fontSize={fontSize}
-                fontWeight="bold"
-                stroke="var(--colour-bg)"
-                strokeWidth={fontSize / 20}
-                style={{
-                  transform: `translate(${rx + stroke * 1.5}px, ${
-                    ry + stroke
-                  }px)`,
-                  transition: "1s linear",
-                }}
-              >
-                {driver.Tla}
-              </text>
-            </g>
-          ) : null;
-        })} -->
-      <!-- {data.corners.map((corner) => {
-        let string = `${corner.number}`;
-        if (corner.letter) string = string + corner.letter;
-
-        const fontSize = stroke * 2;
-
-        const [cornerX, cornerY] = corner.transformedCorner;
-        const [labelX, labelY] = corner.transformedLabel;
-
-        const lineX = labelX + fontSize * (string.length * 0.25);
-        const lineY = labelY - (labelY > cornerY ? fontSize * 0.7 : 0);
-
-        return (
-          <g key={`corner-${corner.number}}`}>
-            <text
-              x={labelX}
-              y={labelY}
-              fontSize={fontSize}
-              fontWeight="bold"
-              fill="red"
-              stroke="var(--colour-bg)"
-              strokeWidth={fontSize / 40}
-            >
-              {string}
-            </text>
-            <path
-              stroke="red"
-              strokeWidth={stroke / 2}
-              opacity={0.25}
-              d={`M${cornerX},${cornerY} L${lineX},${lineY}`}
-            />
-          </g>
-        );
-      })} -->
     </svg>
     }
   </div>
