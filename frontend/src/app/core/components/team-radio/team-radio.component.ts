@@ -9,7 +9,7 @@ import { WebSocketService } from '../../../services/web-socket/web-socket.servic
 import moment from 'moment';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
-import { AudioPlayerComponent } from "../audio-player/audio-player.component";
+import { AudioPlayerComponent } from '../audio-player/audio-player.component';
 
 @Component({
   selector: 'app-team-radio',

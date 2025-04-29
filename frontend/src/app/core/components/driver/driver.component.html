@@ -2,7 +2,7 @@
   class="grid grid-cols-[4em_4em_5em_5em_6em_auto] md:grid-cols-[6em_6em_8em_8em_8em_auto] items-center border-b border-base-100 p-1"
   [ngClass]="{
     'opacity-65': line.Retired || line.Stopped,
-    'md:grid-cols-[5em_6.5em_14em_7em_5em_5em_auto]': !isMobile$()
+    'md:!grid-cols-[5em_6.5em_14em_7em_5em_5em_auto]': !isMobile$()
   }"
 >
   <!-- DRIVER -->
