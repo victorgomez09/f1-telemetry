@@ -9,4 +9,11 @@ export const routes: Routes = [
         (m) => m.DashboardComponent
       ),
   },
+  {
+    path: 'schedule',
+    loadComponent: () =>
+      import('./views/schedule-event/schedule-event.component').then(
+        (m) => m.ScheduleEventComponent
+      ),
+  },
 ];
