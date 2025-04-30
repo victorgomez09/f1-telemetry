@@ -1,30 +1,20 @@
-export type ScheduleEvent = {
-  type: string;
-  params: string[];
-  lastmodified: Date;
-  dtstamp: Date;
+export type ScheduleEventGroup = {
+  event: string;
+  eventDays: ScheduleEventDays[];
   location: string;
-  'ECAL-SCHEDULE': string;
-  start: Date;
-  datetype: string;
-  end: Date;
-  summary: string;
-  transparency: string;
-  sequence: string;
-  uid: string;
-  priority: string;
-  'MICROSOFT-CDO-IMPORTANCE': string;
-  class: string;
-  description: string;
-  alarms: ScheduleEventAlarm[];
-  method: string;
 };
 
-export type ScheduleEventAlarm = {
-  type: string;
-  params: string[];
-  trigger: string;
-  action: string;
-  description: string;
+export type ScheduleEventDays = {
+  date: Date;
+  events: ScheduleEvent[];
+};
+
+export type ScheduleEvent = {
+  start: Date;
   end: Date;
+  name: string;
+  location: string;
+  type: string;
+  summary: string;
+  event: string;
 };

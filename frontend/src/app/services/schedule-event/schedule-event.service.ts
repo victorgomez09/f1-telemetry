@@ -1,6 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { ScheduleEvent } from '../../core/models/schedule-event.model';
+import {
+  ScheduleEvent,
+  ScheduleEventGroup,
+} from '../../core/models/schedule-event.model';
 
 @Injectable({
   providedIn: 'root',
@@ -8,11 +11,11 @@ import { ScheduleEvent } from '../../core/models/schedule-event.model';
 export class ScheduleEventService {
   private httpClient = inject(HttpClient);
 
-  scheduleEvents: WritableSignal<ScheduleEvent[]> = signal([]);
+  scheduleEvents: WritableSignal<ScheduleEventGroup[]> = signal([]);
 
   findAll() {
     return this.httpClient
-      .get<ScheduleEvent[]>('http://localhost:3000/schedule-event')
+      .get<ScheduleEventGroup[]>('http://localhost:3000/schedule-event')
       .subscribe({
         next: (scheduleEvents) => {
           this.scheduleEvents.set(scheduleEvents);
