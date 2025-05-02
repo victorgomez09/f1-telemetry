@@ -1,4 +1,4 @@
-export type F1ExtrapolatedClock = {
+export type ExtrapolatedClock = {
   Utc: string;
   Remaining: string;
   Extrapolating: boolean;

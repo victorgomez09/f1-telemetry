@@ -1,5 +1,5 @@
 <div class="flex flex-1 w-full h-full">
-  <!-- @if (!connected$()) {
+  @if (!connected$()) {
   <main class="flex items-center justify-center w-full h-full">
     <div class="flex flex-col justify-center">
       <p>
@@ -17,7 +17,7 @@
       <p>{{ (delayTarget$() - dateNow) / 1000 }} sec</p>
     </div>
   </main>
-  } @if (connected$() && !data$().Heartbeat) {
+  } @if (connected$() && !hearthbeat) {
   <main class="flex items-center justify-center w-full h-full">
     <div class="flex flex-col justify-center items-center">
       <p>
@@ -26,8 +26,7 @@
       <p>Come back later when there is a live session</p>
     </div>
   </main>
-  } -->
-
+  } @if (connected$() && hearthbeat) {
   <div class="flex flex-col gap-1 w-full">
     <app-session-info class="w-full" />
     <app-wheather class="w-full" />
@@ -45,4 +44,5 @@
       <app-team-radio />
     </div>
   </div>
+  }
 </div>

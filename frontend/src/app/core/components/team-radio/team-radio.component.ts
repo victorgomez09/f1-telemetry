@@ -57,13 +57,13 @@ export class TeamRadioComponent {
 
   get radios() {
     return [
-      ...Object.values(
-        this.websocketService.liveState$().TeamRadio.Captures
-      ).sort(this.sortUtc),
+      ...Object.values(this.websocketService.teamRadio()?.Captures || []).sort(
+        this.sortUtc
+      ),
     ];
   }
 
   get drivers() {
-    return this.websocketService.liveState$().DriverList;
+    return this.websocketService.driverList();
   }
 }

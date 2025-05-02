@@ -16,14 +16,8 @@ import { WeatherData } from '../../models/weather';
   templateUrl: './wheather.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WheatherComponent implements OnInit {
+export class WheatherComponent {
   private websocketService = inject(WebSocketService);
-
-  weather!: WeatherData;
-
-  ngOnInit(): void {
-    this.weather = this.websocketService.weatherInfo;
-  }
 
   getWeatherUnit(key: string) {
     switch (key) {
@@ -50,31 +44,35 @@ export class WheatherComponent implements OnInit {
     return undefined;
   }
 
+  get weather() {
+    return this.websocketService.weather();
+  }
+
   get airTemp() {
-    return Number(this.weather.AirTemp);
+    return Number(this.weather?.AirTemp);
   }
 
   get trackTemp() {
-    return Number(this.weather.TrackTemp);
+    return Number(this.weather?.TrackTemp);
   }
 
   get humidity() {
-    return Number(this.weather.Humidity);
+    return Number(this.weather?.Humidity);
   }
 
   get pressure() {
-    return Number(this.weather.Pressure);
+    return Number(this.weather?.Pressure);
   }
 
   get rainfall() {
-    return Number(this.weather.Rainfall);
+    return Number(this.weather?.Rainfall);
   }
 
   get windSpeed() {
-    return Number(this.weather.WindSpeed);
+    return Number(this.weather?.WindSpeed);
   }
 
   get windDirection() {
-    return Number(this.weather.WindDirection);
+    return Number(this.weather?.WindDirection);
   }
 }

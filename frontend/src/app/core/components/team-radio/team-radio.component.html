@@ -10,9 +10,9 @@
 
           <span
             class="col-span-2"
-            [ngStyle]="{ color: '#' + drivers[radio.RacingNumber].TeamColour }"
+            [ngStyle]="{ color: '#' + drivers![radio.RacingNumber].TeamColour }"
           >
-            {{ radio.RacingNumber }} {{ drivers[radio.RacingNumber].Tla }}
+            {{ radio.RacingNumber }} {{ drivers![radio.RacingNumber].Tla }}
           </span>
 
           <app-audio-player [path]="radio.Path" class="col-span-6" />

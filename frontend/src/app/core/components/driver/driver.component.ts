@@ -8,6 +8,8 @@ import {
   Signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
 
 import {
   Sector,
@@ -20,8 +22,9 @@ import { DriverDrsComponent } from './driver-drs/driver-drs.component';
 import { DriverRpmComponent } from './driver-rpm/driver-rpm.component';
 import { DriverTireComponent } from './driver-tire/driver-tire.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs';
+import { TimingAppLine } from '../../models/timing-app-data.model';
+import { CarChannels } from '../../models/car.model';
+import { TimingLine as TimingLineStats } from '../../models/timing-stats.model';
 
 @Component({
   selector: 'app-driver',
@@ -104,43 +107,48 @@ export class DriverComponent implements OnInit {
   }
 
   get driver() {
-    return this.websocketService.liveState$().DriverList[this.racingNumber];
+    return this.websocketService.driverList()![this.racingNumber];
   }
 
   get timingStats() {
-    return this.websocketService.liveState$().TimingStats.Lines[
-      this.racingNumber
-    ];
+    return (
+      this.websocketService.timingStats()?.Lines[this.racingNumber] ||
+      ({} as TimingLineStats)
+    );
   }
 
   get timingAppData() {
-    return this.websocketService.liveState$().TimingAppData.Lines[
-      this.racingNumber
-    ];
+    return (
+      this.websocketService.timingApp()?.Lines[this.racingNumber] ||
+      ({} as TimingAppLine)
+    );
   }
 
   get timmingData() {
-    return this.websocketService.liveState$().TimingData.Lines[
-      this.racingNumber
-    ];
+    return (
+      this.websocketService.timing()?.Lines[this.racingNumber] ||
+      ({} as TimingLine)
+    );
   }
 
   get checkGridPos() {
-    return Number.isNaN(this.timingAppData.GridPos);
+    return Number.isNaN(this.timingAppData?.GridPos);
   }
 
   get carData() {
-    return this.websocketService.liveState$().CarData.Entries[
-      this.websocketService.liveState$().CarData.Entries.length - 1
-    ].Cars[this.racingNumber].Channels;
+    return (
+      this.websocketService.carData()?.Entries[
+        this.websocketService.carData()!.Entries.length - 1
+      ].Cars[this.racingNumber].Channels || ({} as CarChannels)
+    );
   }
 
   get throttlePercent() {
-    return Math.min(100, this.carData['4']);
+    return Math.min(100, this.carData!['4']);
   }
 
   get brakePercent() {
-    return Math.min(100, this.carData['5']);
+    return Math.min(100, this.carData!['5']);
   }
 
   get lineStats(): any[] {
@@ -148,12 +156,12 @@ export class DriverComponent implements OnInit {
   }
 
   get stints() {
-    return Object.values(this.timingAppData.Stints);
+    return Object.values(this.timingAppData!.Stints);
   }
 
   get currentStint() {
-    return Object.values(this.timingAppData.Stints)[
-      Object.values(this.timingAppData.Stints).length - 1
+    return Object.values(this.timingAppData!.Stints)[
+      Object.values(this.timingAppData!.Stints).length - 1
     ];
   }
 

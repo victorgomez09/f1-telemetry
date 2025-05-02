@@ -31,7 +31,7 @@ export class AudioPlayerComponent implements OnInit {
   ngOnInit(): void {
     this.audio = new Audio(
       `https://livetiming.formula1.com/static/${
-        this.websocketService.liveState$().SessionInfo.Path
+        this.websocketService.sessionInfo()?.Path || ''
       }${this.path}`
     );
 

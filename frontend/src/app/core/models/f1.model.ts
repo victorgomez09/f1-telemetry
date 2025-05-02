@@ -1,5 +1,5 @@
 import { CarData } from './car.model';
-import { F1ExtrapolatedClock } from './clock.model';
+import { ExtrapolatedClock } from './clock.model';
 import { Driver } from './driver.model';
 import { Heartbeat } from './hearthbeat.model';
 import { Laps } from './laps.model';
@@ -15,7 +15,7 @@ import { WeatherData } from './weather';
 
 export type LiveTimming = {
   Heartbeat: Heartbeat;
-  ExtrapolatedClock: F1ExtrapolatedClock;
+  ExtrapolatedClock: ExtrapolatedClock;
   SessionInfo: SessionInfo;
   TrackStatus: TrackStatus;
   DriverList: { [key: string]: Driver };

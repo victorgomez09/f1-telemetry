@@ -17,15 +17,8 @@ import { SessionStatusSeries } from '../../models/session.model';
   templateUrl: './race-control.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RaceControlComponent implements OnInit {
+export class RaceControlComponent {
   private websocketService = inject(WebSocketService);
-
-  messages!: Message[];
-
-  ngOnInit(): void {
-    this.messages =
-      this.websocketService.liveState$().RaceControlMessages.Messages;
-  }
 
   formatDate(date: string) {
     return moment.utc(date).format('HH:mm:ss');
@@ -50,12 +43,14 @@ export class RaceControlComponent implements OnInit {
   get events(): Message[] & SessionStatusSeries[] {
     return [
       ...Object.values(
-        this.websocketService.liveState$().RaceControlMessages.Messages
+        this.websocketService.raceControlMessages()?.Messages || []
       ),
-      ...Object.values(
-        this.websocketService.liveState$().SessionData.StatusSeries
-      ),
+      ...Object.values(this.websocketService.session()?.StatusSeries || []),
     ].sort(this.sortUtc);
+  }
+
+  get messages(): Message[] {
+    return this.websocketService.raceControlMessages()?.Messages || [];
   }
 
   private sortUtc(a: any, b: any) {

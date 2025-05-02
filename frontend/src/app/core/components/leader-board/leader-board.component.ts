@@ -26,14 +26,9 @@ export class LeaderBoardComponent implements OnInit {
   private breakpointObserver$ = inject(BreakpointObserver);
   private injector = inject(Injector);
 
-  timmingData!: [string, TimingLine][];
   isMobile$!: Signal<boolean>;
 
   ngOnInit(): void {
-    this.timmingData = Object.entries(
-      this.websocketService.liveState$().TimingData.Lines
-    ).sort(this.sortPosition);
-
     this.isMobile$ = toSignal(
       this.breakpointObserver$
         .observe(Breakpoints.Handset)
@@ -51,11 +46,17 @@ export class LeaderBoardComponent implements OnInit {
     return aPos - bPos;
   }
 
+  get timing() {
+    return Object.entries(
+      this.websocketService.liveState$().TimingData.Lines
+    ).sort(this.sortPosition);
+  }
+
   get first10Lines() {
-    return this.timmingData.slice(0, 10);
+    return this.timing.slice(0, 10);
   }
 
   get last10Lines() {
-    return this.timmingData.slice(10, 20);
+    return this.timing.slice(10, 20);
   }
 }

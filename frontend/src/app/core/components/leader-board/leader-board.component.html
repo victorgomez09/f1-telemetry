@@ -56,7 +56,7 @@
             <p class="font-semibold">SECTORS</p>
           </div>
 
-          @for (line of timmingData; track $index) {
+          @for (line of timing; track $index) {
           <app-driver [racingNumber]="line[0]" [line]="line[1]" />
           }
         </div>
